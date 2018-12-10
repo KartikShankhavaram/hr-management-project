@@ -44,17 +44,6 @@ public class LeaveApplicationStatus extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-//		LeaveApplicationObject app1 = new LeaveApplicationObject("Jared Dunn", "CSE", "RT5Y7", "2018-12-10", "Assistant Professor", "PL", true, "2018-12-15", "2018-12-18", 4, "DOFA", "Spending time with family.");
-//		LeaveApplicationObject app2 = new LeaveApplicationObject("Richard Hendricks", "ECE", "HJYI4", "2018-12-10", "Professor", "CL", false, "2018-12-19", "2018-12-21", 3, "DOFA", "Gotta catch 'em all!");
-//		
-//		DefaultListModel<LeaveApplicationObject> model = new DefaultListModel<>();
-//		model.addElement(app1);
-//		model.addElement(app2);
-//		
-//		JList<LeaveApplicationObject> list = new JList<>(model);
-//		list.setCellRenderer(new ApplicationStatusRenderer());
-//		contentPane.add(new JScrollPane(list));
-		
 		String columns[] = {"No.", "Application date", "Type of leave", "Urgent", "From", "To", "Status"};
 		String data[][] = {};
 		

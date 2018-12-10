@@ -150,7 +150,7 @@ public class LeaveApplication extends JFrame {
 		lblApplyTo.setBounds(237, 339, 113, 14);
 		
 		JButton btnGoToAppraisal = new JButton("Submit Leave Application");
-		btnGoToAppraisal.setBounds(181, 469, 180, 23);
+		btnGoToAppraisal.setBounds(166, 468, 180, 23);
 		
 		JLabel numberOfLeaveDays = new JLabel("1");
 		numberOfLeaveDays.setBounds(149, 339, 46, 14);
