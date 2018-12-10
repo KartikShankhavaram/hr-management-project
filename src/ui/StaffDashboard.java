@@ -48,22 +48,46 @@ public class StaffDashboard extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnApplyForLeave = new JButton("Apply for Leave");
+		btnApplyForLeave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				LeaveApplication obj = new LeaveApplication();
+				obj.setVisible(true);
+				//setVisible(false);
+			}
+		});
 		btnApplyForLeave.setBounds(53, 86, 143, 23);
 		contentPane.add(btnApplyForLeave);
 		
 		JButton btnViewApplicationStatus = new JButton("View Application\n Status");
 		btnViewApplicationStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				LeaveApplicationStatus obj = new LeaveApplicationStatus();
+				obj.setVisible(true);
+				//setVisible(false);
 			}
 		});
 		btnViewApplicationStatus.setBounds(227, 86, 171, 23);
 		contentPane.add(btnViewApplicationStatus);
 		
 		JButton btnViewRemainingLeaves = new JButton("View Remaining Leaves");
+		btnViewRemainingLeaves.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				RemainingLeaves obj = new RemainingLeaves();
+				obj.setVisible(true);
+				//setVisible(false);
+			}
+		});
 		btnViewRemainingLeaves.setBounds(227, 173, 171, 23);
 		contentPane.add(btnViewRemainingLeaves);
 		
 		JButton btnFillAppraisalForm = new JButton("Fill Appraisal Form");
+		btnFillAppraisalForm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Appraisal obj = new Appraisal();
+				obj.setVisible(true);
+				//setVisible(false);
+			}
+		});
 		btnFillAppraisalForm.setBounds(53, 173, 143, 23);
 		contentPane.add(btnFillAppraisalForm);
 		

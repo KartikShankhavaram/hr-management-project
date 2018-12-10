@@ -17,6 +17,8 @@ import javax.swing.ListCellRenderer;
 import model.LeaveApplicationObject;
 
 public class ApplicationStatusRenderer extends JLabel implements ListCellRenderer<LeaveApplicationObject> {
+	public ApplicationStatusRenderer() {
+	}
 
 	@Override
 	public Component getListCellRendererComponent(JList<? extends LeaveApplicationObject> list,
