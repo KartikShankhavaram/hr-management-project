@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/Kartik Shankhavaram/eclipse-workspace/HR_Management/mysql-connector-java-5.1.47.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Kartik Shankhavaram/eclipse-workspace/HR_Management/LGoodDatePicker-10.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dell/Documents/hr-management-project/LGoodDatePicker-10.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dell/Documents/hr-management-project/mysql-connector-java-5.1.47.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
