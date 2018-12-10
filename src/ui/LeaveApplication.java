@@ -68,7 +68,7 @@ public class LeaveApplication extends JFrame {
 	 */
 	public LeaveApplication() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 525, 564);
+		setBounds(100, 100, 525, 558);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -183,22 +183,22 @@ public class LeaveApplication extends JFrame {
 		endDate.setBounds(285, 297, 160, 24);
 		endDate.getComponentToggleCalendarButton().setBounds(136, 0, 24, 24);
 		endDate.getComponentDateTextField().setBounds(0, 0, 136, 24);
-        endDate.setDate(LocalDate.now().plusDays(8));
+        endDate.setDate(LocalDate.now().plusDays(7));
         JButton endDatePickerButton = endDate.getComponentToggleCalendarButton();
         endDatePickerButton.setText("");
         endDatePickerButton.setIcon(dateExampleIcon);
 		endDate.setLayout(null);
-		endDateSettings.setDateRangeLimits(LocalDate.now().plusDays(8), null);
+		endDateSettings.setDateRangeLimits(LocalDate.now().plusDays(7), null);
 		
 		startDate.addDateChangeListener(new DateChangeListener() {
 			
 			@Override
 			public void dateChanged(DateChangeEvent arg0) {
 				// TODO Auto-generated method stub
-				if(!startDate.getDate().isBefore(endDate.getDate())) {
-					endDate.setDate(startDate.getDate().plusDays(1));
+				if(startDate.getDate().isAfter(endDate.getDate())) {
+					endDate.setDate(startDate.getDate());
 				}
-				numberOfLeaveDays.setText(startDate.getDate().until(endDate.getDate(), ChronoUnit.DAYS) + "");				
+				numberOfLeaveDays.setText(startDate.getDate().until(endDate.getDate(), ChronoUnit.DAYS) + 1 + "");				
 			}
 		});
 		
@@ -207,10 +207,10 @@ public class LeaveApplication extends JFrame {
 			@Override
 			public void dateChanged(DateChangeEvent arg0) {
 				// TODO Auto-generated method stub
-				if(!startDate.getDate().isBefore(endDate.getDate())) {
+				if(startDate.getDate().isAfter(endDate.getDate())) {
 					startDate.setDate(endDate.getDate().minusDays(1));
 				}
-				numberOfLeaveDays.setText(startDate.getDate().until(endDate.getDate(), ChronoUnit.DAYS) + "");
+				numberOfLeaveDays.setText(startDate.getDate().until(endDate.getDate(), ChronoUnit.DAYS) + 1 + "");
 			}
 		});
 		
@@ -226,9 +226,9 @@ public class LeaveApplication extends JFrame {
 					minDays = 0;
 				}
 				startDateSettings.setDateRangeLimits(LocalDate.now().plusDays(minDays), null);
-				endDateSettings.setDateRangeLimits(LocalDate.now().plusDays(minDays + 1), null);
+				endDateSettings.setDateRangeLimits(LocalDate.now().plusDays(minDays), null);
 				startDate.setDate(LocalDate.now().plusDays(minDays));
-				endDate.setDate(LocalDate.now().plusDays(minDays+1));
+				endDate.setDate(LocalDate.now().plusDays(minDays));
 			}
 		});
 		
