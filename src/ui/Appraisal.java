@@ -353,6 +353,7 @@ public class Appraisal extends JFrame {
 				
 				if(confTitle.trim().isEmpty() || confDesc.trim().isEmpty()) {
 					JOptionPane.showMessageDialog(Appraisal.this, "Fill all the required fields", "Fill empty fields", JOptionPane.WARNING_MESSAGE);
+					return;
 				}
 				
 				Conference conf = new Conference(confTitle, confDesc, isSpeaker, ac, startDate, endDate);
@@ -548,6 +549,7 @@ public class Appraisal extends JFrame {
 				
 				if(paperTitle.trim().isEmpty() || paperDesc.trim().isEmpty()) {
 					JOptionPane.showMessageDialog(Appraisal.this, "Fill all the required fields", "Fill empty fields", JOptionPane.WARNING_MESSAGE);
+					return;
 				}
 				ResearchPaper paper = new ResearchPaper(paperTitle, paperDesc, date, firstAuthor, journals);
 				
