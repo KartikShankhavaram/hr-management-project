@@ -83,7 +83,7 @@ public class LeaveApplication extends JFrame {
 		JLabel lblDepartment = new JLabel("Department");
 		lblDepartment.setBounds(265, 53, 85, 14);
 		
-		JLabel lblEmployeeNo = new JLabel("Employee No");
+		JLabel lblEmployeeNo = new JLabel("Employee Id");
 		lblEmployeeNo.setBounds(26, 97, 113, 14);
 		
 		JLabel lblDate = new JLabel("Date");
@@ -140,8 +140,6 @@ public class LeaveApplication extends JFrame {
 		reasonTextArea.setRows(3);
 		reasonTextArea.setBounds(95, 381, 351, 61);
 		reasonTextArea.setLineWrap(true);
-		
-		String[] applyToRoles = new String[] {"HOD", "DOFA", "DORC", "Director"};
 		
 		JButton btnGoToAppraisal = new JButton("Submit Leave Application");
 		btnGoToAppraisal.setBounds(166, 468, 180, 23);

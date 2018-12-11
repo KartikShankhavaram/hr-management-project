@@ -34,7 +34,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 
-public class LeaveApplicationReview extends JFrame {
+public class ApplicationStatusTS extends JFrame {
 
 	/**
 	 * 
@@ -49,7 +49,7 @@ public class LeaveApplicationReview extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LeaveApplicationReview frame = new LeaveApplicationReview();
+					ApplicationStatusTS frame = new ApplicationStatusTS();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,15 +61,15 @@ public class LeaveApplicationReview extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LeaveApplicationReview() {
+	public ApplicationStatusTS() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 507, 661);
+		setBounds(100, 100, 507, 619);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("Leave Application Review TS");
-		lblNewLabel.setBounds(149, 11, 303, 19);
+		JLabel lblNewLabel = new JLabel("Leave Application Status TS");
+		lblNewLabel.setBounds(135, 11, 303, 19);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JLabel lblEmployeeName = new JLabel("Employee Name");
@@ -88,7 +88,7 @@ public class LeaveApplicationReview extends JFrame {
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
-		lblLeaveDetails.setBounds(208, 182, 94, 14);
+		lblLeaveDetails.setBounds(202, 184, 94, 14);
 		lblLeaveDetails.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");
@@ -203,18 +203,6 @@ public class LeaveApplicationReview extends JFrame {
 		JLabel lblPending = new JLabel("Pending");
 		lblPending.setBounds(415, 476, 46, 14);
 		contentPane.add(lblPending);
-		
-		JButton button = new JButton("Approve ");
-		button.setBounds(122, 576, 89, 23);
-		contentPane.add(button);
-		
-		JButton btnReject = new JButton("Reject ");
-		btnReject.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnReject.setBounds(271, 576, 89, 23);
-		contentPane.add(btnReject);
 		
 	}
 }

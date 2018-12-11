@@ -34,7 +34,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 
-public class LeaveApplicationReview extends JFrame {
+public class LeaveApplicationNTS extends JFrame {
 
 	/**
 	 * 
@@ -49,7 +49,7 @@ public class LeaveApplicationReview extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LeaveApplicationReview frame = new LeaveApplicationReview();
+					LeaveApplicationNTS frame = new LeaveApplicationNTS();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,14 +61,14 @@ public class LeaveApplicationReview extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LeaveApplicationReview() {
+	public LeaveApplicationNTS() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 507, 661);
+		setBounds(100, 100, 507, 615);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("Leave Application Review TS");
+		JLabel lblNewLabel = new JLabel("Leave Application Review NTS");
 		lblNewLabel.setBounds(149, 11, 303, 19);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
@@ -88,7 +88,7 @@ public class LeaveApplicationReview extends JFrame {
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
-		lblLeaveDetails.setBounds(208, 182, 94, 14);
+		lblLeaveDetails.setBounds(208, 197, 94, 14);
 		lblLeaveDetails.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");
@@ -180,13 +180,9 @@ public class LeaveApplicationReview extends JFrame {
 		lblNewLabel_11.setBounds(93, 381, 388, 70);
 		contentPane.add(lblNewLabel_11);
 		
-		JLabel lblHodsApproval = new JLabel("HOD's Approval");
+		JLabel lblHodsApproval = new JLabel("Registrar's Approval");
 		lblHodsApproval.setBounds(26, 476, 113, 14);
 		contentPane.add(lblHodsApproval);
-		
-		JLabel lblDofaApproval = new JLabel("DoFA's approval");
-		lblDofaApproval.setBounds(26, 526, 79, 14);
-		contentPane.add(lblDofaApproval);
 		
 		JLabel lblDirector = new JLabel("Director's Approval");
 		lblDirector.setBounds(285, 476, 100, 14);
@@ -196,24 +192,16 @@ public class LeaveApplicationReview extends JFrame {
 		lblNewLabel_12.setBounds(149, 476, 85, 14);
 		contentPane.add(lblNewLabel_12);
 		
-		JLabel lblNewLabel_13 = new JLabel("Pending");
-		lblNewLabel_13.setBounds(149, 526, 94, 14);
-		contentPane.add(lblNewLabel_13);
-		
 		JLabel lblPending = new JLabel("Pending");
 		lblPending.setBounds(415, 476, 46, 14);
 		contentPane.add(lblPending);
 		
-		JButton button = new JButton("Approve ");
-		button.setBounds(122, 576, 89, 23);
-		contentPane.add(button);
+		JButton btnApprove = new JButton("Approve ");
+		btnApprove.setBounds(125, 528, 89, 23);
+		contentPane.add(btnApprove);
 		
-		JButton btnReject = new JButton("Reject ");
-		btnReject.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnReject.setBounds(271, 576, 89, 23);
+		JButton btnReject = new JButton("Reject");
+		btnReject.setBounds(265, 528, 89, 23);
 		contentPane.add(btnReject);
 		
 	}
