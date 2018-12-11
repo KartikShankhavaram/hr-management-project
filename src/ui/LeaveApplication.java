@@ -143,12 +143,6 @@ public class LeaveApplication extends JFrame {
 		
 		String[] applyToRoles = new String[] {"HOD", "DOFA", "DORC", "Director"};
 		
-		JComboBox<String> comboBox_1 = new JComboBox(applyToRoles);
-		comboBox_1.setBounds(360, 336, 83, 20);
-		
-		JLabel lblApplyTo = new JLabel("Apply to");
-		lblApplyTo.setBounds(237, 339, 113, 14);
-		
 		JButton btnGoToAppraisal = new JButton("Submit Leave Application");
 		btnGoToAppraisal.setBounds(166, 468, 180, 23);
 		
@@ -254,8 +248,6 @@ public class LeaveApplication extends JFrame {
 		contentPane.add(lblTotalNoOf);
 		contentPane.add(lblReason);
 		contentPane.add(reasonTextArea);
-		contentPane.add(lblApplyTo);
-		contentPane.add(comboBox_1);
 		contentPane.add(btnGoToAppraisal);
 		contentPane.add(numberOfLeaveDays);
 		contentPane.add(chckbxUrgent);

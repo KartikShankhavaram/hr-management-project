@@ -7,22 +7,37 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
+import controller.Appraisal_Controller;
+import model.AppraisalModel;
+import model.Conference;
+import model.ResearchPaper;
+import utils.DocumentSizeFilter;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 import javax.swing.JTextField;
 import javax.swing.JTable;
@@ -37,16 +52,31 @@ import javax.swing.JButton;
 public class Appraisal extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField txtEmployeeName;
+	private JTextField txtEmployeeDept;
+	private JTextField txtEmployeeId;
+	private JTextField txtEmployeeDesignation;
+	private JTextField txtTitle;
+	private JTextField txtConfTitle;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTable papersTable;
+	private JTable conferencesTable;
 	private JPanel panel;
 	private ImageIcon dateButtonIcon;
+	private JLabel lblHOD;
+	private Appraisal_Controller controller;
+	private String employeeId;
+	private DatePicker publicationDatePicker;
+	private JComboBox comboBoxAC;
+	private	JTextArea txtAreaConfDesc;
+	private JComboBox comboBoxSpeaker;
+	private DatePicker conferenceStartDate;
+	private DatePicker conferenceEndDate;
+	private JTextArea txtAreaDesc;
+	private JComboBox comboBoxFirstAuthor;
+	private JTextArea txtAreaJournals;
+	private boolean editingMode = false;
+	private int editIndex = -1;
 
 	/**
 	 * Launch the application.
@@ -55,8 +85,8 @@ public class Appraisal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Appraisal frame = new Appraisal();
-					frame.setVisible(true);
+					Appraisal frame = new Appraisal("16TS112");
+					//frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,7 +97,7 @@ public class Appraisal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Appraisal() {
+	public Appraisal(String employeeId) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 960, 600);
 		contentPane = new JPanel();
@@ -100,33 +130,39 @@ public class Appraisal extends JFrame {
 		lblDesignation.setBounds(242, 128, 77, 14);
 		contentPane.add(lblDesignation);
 		
-		textField = new JTextField();
-		textField.setBounds(137, 75, 86, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		txtEmployeeName = new JTextField();
+		txtEmployeeName.setEditable(false);
+		txtEmployeeName.setBounds(137, 75, 86, 20);
+		contentPane.add(txtEmployeeName);
+		txtEmployeeName.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(329, 75, 86, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		txtEmployeeDept = new JTextField();
+		txtEmployeeDept.setEditable(false);
+		txtEmployeeDept.setBounds(329, 75, 86, 20);
+		contentPane.add(txtEmployeeDept);
+		txtEmployeeDept.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(137, 125, 86, 20);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		txtEmployeeId = new JTextField();
+		txtEmployeeId.setEditable(false);
+		txtEmployeeId.setBounds(137, 125, 86, 20);
+		contentPane.add(txtEmployeeId);
+		txtEmployeeId.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(329, 125, 86, 20);
-		contentPane.add(textField_3);
-		textField_3.setColumns(10);
+		txtEmployeeDesignation = new JTextField();
+		txtEmployeeDesignation.setEditable(false);
+		txtEmployeeDesignation.setBounds(329, 125, 86, 20);
+		contentPane.add(txtEmployeeDesignation);
+		txtEmployeeDesignation.setColumns(10);
 		
-		JLabel lblHeadOfAny = new JLabel("Special positions");
-		lblHeadOfAny.setBounds(32, 233, 132, 14);
-		contentPane.add(lblHeadOfAny);
+		lblHOD = new JLabel("HOD");
+		lblHOD.setBounds(32, 233, 132, 14);
+		contentPane.add(lblHOD);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setBounds(137, 228, 278, 81);
-		contentPane.add(textArea);
+		JTextArea txtAreaHOD = new JTextArea();
+		txtAreaHOD.setLineWrap(true);
+		JScrollPane spHOD = new JScrollPane(txtAreaHOD);
+		spHOD.setBounds(151, 233, 278, 50);
+		contentPane.add(spHOD);
 		
 		JLabel lblWhatToAdd = new JLabel("What to add?");
 		lblWhatToAdd.setBounds(481, 78, 95, 14);
@@ -141,9 +177,6 @@ public class Appraisal extends JFrame {
 		URL dateImageURL = LeaveApplication.class.getResource("/resources/datepickerbutton1.png");
         Image dateExampleImage = Toolkit.getDefaultToolkit().getImage(dateImageURL);
         dateButtonIcon = new ImageIcon(dateExampleImage);
-        
-        showPaperTable();
-        rdbtnPaper.setSelected(true);
         
 		rdbtnPaper.addActionListener(new ActionListener() {
 			@Override
@@ -163,6 +196,27 @@ public class Appraisal extends JFrame {
 		rdbtnConference.setBounds(808, 74, 101, 23);
 		contentPane.add(rdbtnConference);
 		
+		JLabel lblFacultyMentor = new JLabel("Faculty Mentor");
+		lblFacultyMentor.setBounds(32, 304, 132, 15);
+		contentPane.add(lblFacultyMentor);
+		
+		JTextArea txtAreaFM = new JTextArea();
+		txtAreaFM.setLineWrap(true);
+		JScrollPane spFM = new JScrollPane(txtAreaFM);
+		spFM.setBounds(161, 304, 278, 44);
+		contentPane.add(spFM);
+		
+		JButton btnSubmitAppraisalForm = new JButton("Submit Appraisal Form");
+		btnSubmitAppraisalForm.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.setHOD(txtAreaHOD.getText());
+				controller.setFacultyMentor(txtAreaFM.getText());
+				controller.submitAppraisalForm();
+			}
+		});
+		btnSubmitAppraisalForm.setBounds(109, 525, 210, 25);
+		contentPane.add(btnSubmitAppraisalForm);
+		
 		rdbtnConference.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -170,42 +224,15 @@ public class Appraisal extends JFrame {
 				// Conference choice
 				
 				panel.removeAll();
-				
-				String[] columnNames = {"No.", "Title", "Description", "Date of conference", "Was speaker", "Attended/Conducted" };      
-				
-				papersTable = new JTable(new String[][] {}, columnNames);
-				papersTable.setBounds(10, 11, 418, 300);
-				papersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-				papersTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-				papersTable.getColumnModel().getColumn(1).setPreferredWidth(75);
-				papersTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-				papersTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-				papersTable.getColumnModel().getColumn(4).setPreferredWidth(90);
-				papersTable.getColumnModel().getColumn(5).setPreferredWidth(110);
-				JScrollPane sp=new JScrollPane(papersTable);
-				sp.setBounds(10, 11, 418, 300);
-				panel.add(sp);
-				
-				JButton btnAddConferenceEntry = new JButton("Add Conference Entry");
-				
-				btnAddConferenceEntry.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						panel.removeAll();
-						showConferenceForm();
-						validate();
-						repaint();
-					}
-				});
-				
-				btnAddConferenceEntry.setBounds(152, 339, 160, 23);
-				panel.add(btnAddConferenceEntry);
-				
+				showConferenceTable();				
 				validate();
 				repaint();
 			}
 		});
-				
+		this.employeeId = employeeId;
+		controller = new Appraisal_Controller(employeeId, this);
+		showPaperTable();
+        rdbtnPaper.setSelected(true);
 	}
 	
 	private void showConferenceForm() {
@@ -213,10 +240,10 @@ public class Appraisal extends JFrame {
 		lblConferenceTopic.setBounds(10, 0, 105, 20);
 		panel.add(lblConferenceTopic);
 		
-		textField_5 = new JTextField();
-		textField_5.setBounds(159, 0, 269, 20);
-		panel.add(textField_5);
-		textField_5.setColumns(10);
+		txtConfTitle = new JTextField();
+		txtConfTitle.setBounds(159, 0, 269, 20);
+		panel.add(txtConfTitle);
+		txtConfTitle.setColumns(10);
 		
 		JLabel lblAttendedconducted = new JLabel("Attended/Conducted");
 		lblAttendedconducted.setBounds(18, 212, 131, 14);
@@ -224,25 +251,28 @@ public class Appraisal extends JFrame {
 		
 		String[] confChoice = new String[] {"Attended", "Conducted"};
 		
-		JComboBox comboBox = new JComboBox(confChoice);
-		comboBox.setBounds(159, 209, 97, 20);
-		panel.add(comboBox);
+		comboBoxAC = new JComboBox(confChoice);
+		comboBoxAC.setBounds(159, 209, 97, 20);
+		panel.add(comboBoxAC);
 		
 		JLabel lblDescription = new JLabel("Description");
 		lblDescription.setBounds(10, 60, 105, 14);
 		panel.add(lblDescription);
 		
-		JTextArea textArea_1 = new JTextArea();
-		textArea_1.setBounds(159, 55, 269, 89);
-		panel.add(textArea_1);
+		txtAreaConfDesc = new JTextArea();
+		JScrollPane spConfDesc = new JScrollPane(txtAreaConfDesc);
+		spConfDesc.setBounds(159, 55, 269, 89);
+		panel.add(spConfDesc);
+		txtAreaConfDesc.setLineWrap(true);
+		((AbstractDocument)txtAreaConfDesc.getDocument()).setDocumentFilter(new DocumentSizeFilter(255));
 		
 		JLabel lblWasSpeaker = new JLabel("Was Speaker?");
 		lblWasSpeaker.setBounds(18, 181, 97, 14);
 		panel.add(lblWasSpeaker);
 		
-		JComboBox comboBox_1 = new JComboBox(new String[] {"Yes", "No"});
-		comboBox_1.setBounds(159, 178, 77, 20);
-		panel.add(comboBox_1);
+		comboBoxSpeaker = new JComboBox(new String[] {"Yes", "No"});
+		comboBoxSpeaker.setBounds(159, 178, 77, 20);
+		panel.add(comboBoxSpeaker);
 		
 		JLabel lblDateOfConference = new JLabel("Date of conference");
 		lblDateOfConference.setBounds(18, 250, 131, 24);
@@ -253,7 +283,7 @@ public class Appraisal extends JFrame {
 		conferenceStartDateSettings.setAllowEmptyDates(false);
 		conferenceStartDateSettings.setAllowKeyboardEditing(false);
 		
-		DatePicker conferenceStartDate = new DatePicker(conferenceStartDateSettings);
+		conferenceStartDate = new DatePicker(conferenceStartDateSettings);
 		conferenceStartDate.setBounds(159, 251, 160, 24);
 		conferenceStartDate.getComponentToggleCalendarButton().setBounds(136, 0, 24, 24);
 		conferenceStartDate.getComponentDateTextField().setBounds(0, 0, 136, 24);
@@ -270,7 +300,7 @@ public class Appraisal extends JFrame {
 		conferenceEndDateSettings.setAllowEmptyDates(false);
 		conferenceEndDateSettings.setAllowKeyboardEditing(false);
 		
-		DatePicker conferenceEndDate = new DatePicker(conferenceEndDateSettings);
+		conferenceEndDate = new DatePicker(conferenceEndDateSettings);
 		conferenceEndDate.setBounds(159, 311, 160, 24);
 		conferenceEndDate.getComponentToggleCalendarButton().setBounds(136, 0, 24, 24);
 		conferenceEndDate.getComponentDateTextField().setBounds(0, 0, 136, 24);
@@ -311,6 +341,35 @@ public class Appraisal extends JFrame {
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String confTitle = txtConfTitle.getText();
+				String confDesc = txtAreaConfDesc.getText();
+				boolean isSpeaker = comboBoxSpeaker.getSelectedItem().equals("Yes");
+				String ac = (String)comboBoxAC.getSelectedItem();
+				
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+				String startDate = formatter.format(conferenceStartDate.getDate());
+				String endDate = formatter.format(conferenceEndDate.getDate());
+				
+				if(confTitle.trim().isEmpty() || confDesc.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(Appraisal.this, "Fill all the required fields", "Fill empty fields", JOptionPane.WARNING_MESSAGE);
+				}
+				
+				Conference conf = new Conference(confTitle, confDesc, isSpeaker, ac, startDate, endDate);
+				
+				if(editingMode) {
+					controller.getConferences().remove(editIndex);
+					controller.onAddConference(conf, editIndex);
+					editingMode = false;
+					editIndex = -1;
+				} else {
+					controller.onAddConference(conf);
+				}
+								
+				panel.removeAll();
+				showConferenceTable();
+				validate();
+				repaint();
 			}
 		});
 		btnSubmit.setBounds(83, 381, 89, 23);
@@ -330,19 +389,68 @@ public class Appraisal extends JFrame {
 	}
 	
 	private void showConferenceTable() {
-		String[] columnNames = {"No.", "Title", "Description", "Date of conference", "Was speaker", "Attended/Conducted" };      
+		String[] columnNames = {"No.", "Title", "Description", "Date of conference", "Was speaker", "Attended/Conducted" };
+		ArrayList<Conference> conferences = controller.getConferences();
 		
-		papersTable = new JTable(new String[][] {}, columnNames);
-		papersTable.setBounds(10, 11, 418, 300);
-		papersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		papersTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-		papersTable.getColumnModel().getColumn(1).setPreferredWidth(75);
-		papersTable.getColumnModel().getColumn(2).setPreferredWidth(200);
-		papersTable.getColumnModel().getColumn(3).setPreferredWidth(150);
-		papersTable.getColumnModel().getColumn(4).setPreferredWidth(90);
-		papersTable.getColumnModel().getColumn(5).setPreferredWidth(110);
-		JScrollPane sp=new JScrollPane(papersTable);
+		DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		String[][] data = new String[conferences.size()][6];
+		for(int i = 0; i < conferences.size(); i++) {
+			Conference conference = conferences.get(i);
+			data[i][0] = Integer.toString(i+1);
+			data[i][1] = conference.getTopic();
+			data[i][2] = conference.getDescription();
+			String startDate = formatter.format(LocalDate.parse(conference.getStartDate(), parser));
+			String endDate = formatter.format(LocalDate.parse(conference.getEndDate(), parser));
+			data[i][3] = startDate + " - " + endDate;
+			data[i][4] = conference.isSpeaker()?"Yes":"No";
+			data[i][5] = conference.getAttendedOrConducted();
+		}
+		
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		};
+		conferencesTable = new JTable(data, columnNames);
+		conferencesTable.setModel(model);
+		conferencesTable.setBounds(10, 11, 418, 300);
+		conferencesTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		conferencesTable.getColumnModel().getColumn(0).setPreferredWidth(25);
+		conferencesTable.getColumnModel().getColumn(1).setPreferredWidth(75);
+		conferencesTable.getColumnModel().getColumn(2).setPreferredWidth(200);
+		conferencesTable.getColumnModel().getColumn(3).setPreferredWidth(180);
+		conferencesTable.getColumnModel().getColumn(4).setPreferredWidth(90);
+		conferencesTable.getColumnModel().getColumn(5).setPreferredWidth(110);
+		JScrollPane sp=new JScrollPane(conferencesTable);
 		sp.setBounds(10, 11, 418, 300);
+		
+		conferencesTable.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        Point point = mouseEvent.getPoint();
+		        int row = table.rowAtPoint(point);
+		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+		            Conference conference = controller.getConferences().get(table.getSelectedRow());
+		            panel.removeAll();
+		            showConferenceForm();
+		            validate();
+		            repaint();
+		            editingMode = true;
+		            editIndex = table.getSelectedRow();
+		            txtConfTitle.setText(conference.getTopic());
+		            txtAreaConfDesc.setText(conference.getDescription());
+		            comboBoxSpeaker.setSelectedItem(conference.isSpeaker()?"Yes":"No");
+		            comboBoxAC.setSelectedItem(conference.getAttendedOrConducted());
+		            conferenceStartDate.setDate(LocalDate.parse(conference.getStartDate(), parser));
+		            conferenceEndDate.setDate(LocalDate.parse(conference.getEndDate(), parser));
+		        }
+		    }
+		});
+		
 		panel.add(sp);
 		
 		JButton btnAddConferenceEntry = new JButton("Add Conference Entry");
@@ -362,24 +470,28 @@ public class Appraisal extends JFrame {
 	}
 	
 	private void showPaperForm() {
-		JLabel lblName = new JLabel("Title");
+		JLabel lblName = new JLabel("Title*");
 		lblName.setBounds(10, 0, 46, 20);
 		panel.add(lblName);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(107, 0, 308, 20);
-		panel.add(textField_4);
-		textField_4.setColumns(10);
+		txtTitle = new JTextField();
+		txtTitle.setBounds(107, 0, 308, 20);
+		panel.add(txtTitle);
+		txtTitle.setColumns(10);
 		
-		JLabel lblDescription = new JLabel("Description");
+		JLabel lblDescription = new JLabel("Description*");
 		lblDescription.setBounds(10, 71, 77, 14);
 		panel.add(lblDescription);
 		
-		JTextArea textArea_1 = new JTextArea();
-		textArea_1.setBounds(107, 66, 308, 72);
-		panel.add(textArea_1);
+		txtAreaDesc = new JTextArea();
+		JScrollPane spDesc = new JScrollPane(txtAreaDesc);
+		spDesc.setBounds(107, 66, 308, 72);
+		panel.add(spDesc);
+		txtAreaDesc.setLineWrap(true);
+		((AbstractDocument)txtAreaDesc.getDocument()).setDocumentFilter(new DocumentSizeFilter(255));
+
 		
-		JLabel lblDateOfPublication = new JLabel("Date of publication");
+		JLabel lblDateOfPublication = new JLabel("Date of publication*");
 		lblDateOfPublication.setBounds(10, 173, 116, 14);
 		panel.add(lblDateOfPublication);
 		
@@ -388,7 +500,7 @@ public class Appraisal extends JFrame {
         publicationDateSettings.setAllowEmptyDates(false);
         publicationDateSettings.setAllowKeyboardEditing(false);
         
-		DatePicker publicationDatePicker = new DatePicker(publicationDateSettings);
+		publicationDatePicker = new DatePicker(publicationDateSettings);
 		publicationDatePicker.setBounds(186, 169, 160, 24);
 		panel.add(publicationDatePicker);
 		publicationDatePicker.getComponentToggleCalendarButton().setBounds(136, 0, 24, 24);
@@ -406,21 +518,52 @@ public class Appraisal extends JFrame {
 		
 		String choices[] = new String[] {"Yes", "No"};
 		
-		JComboBox comboBox = new JComboBox(choices);
-		comboBox.setBounds(186, 201, 77, 20);
-		panel.add(comboBox);
+		comboBoxFirstAuthor = new JComboBox(choices);
+		comboBoxFirstAuthor.setBounds(186, 201, 77, 20);
+		panel.add(comboBoxFirstAuthor);
 		
 		JLabel lblPublishedInWhich = new JLabel("Published in which journals?");
 		lblPublishedInWhich.setBounds(10, 246, 163, 14);
 		panel.add(lblPublishedInWhich);
 		
-		JTextArea textArea_2 = new JTextArea();
-		textArea_2.setBounds(183, 241, 199, 42);
-		panel.add(textArea_2);
+		txtAreaJournals = new JTextArea();
+		JScrollPane spJournals = new JScrollPane(txtAreaJournals);
+		spJournals.setBounds(183, 241, 199, 42);
+		panel.add(spJournals);
+		txtAreaJournals.setLineWrap(true);
+		((AbstractDocument)txtAreaJournals.getDocument()).setDocumentFilter(new DocumentSizeFilter(255));
 		
 		JButton btnSubmit = new JButton("Submit");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String paperTitle = txtTitle.getText();
+				String paperDesc = txtAreaDesc.getText();
+				
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				
+				String date = formatter.format(publicationDatePicker.getDate());
+				
+				boolean firstAuthor = comboBoxFirstAuthor.getSelectedItem().equals("Yes");
+				String journals = txtAreaJournals.getText();
+				
+				if(paperTitle.trim().isEmpty() || paperDesc.trim().isEmpty()) {
+					JOptionPane.showMessageDialog(Appraisal.this, "Fill all the required fields", "Fill empty fields", JOptionPane.WARNING_MESSAGE);
+				}
+				ResearchPaper paper = new ResearchPaper(paperTitle, paperDesc, date, firstAuthor, journals);
+				
+				if(editingMode) {
+					controller.getPapers().remove(editIndex);
+					controller.onAddPaper(paper, editIndex);
+					editIndex = -1;
+					editingMode = false;
+				} else {
+					controller.onAddPaper(paper);
+				}
+								
+				panel.removeAll();
+				showPaperTable();
+				validate();
+				repaint();
 			}
 		});
 		btnSubmit.setBounds(83, 330, 89, 23);
@@ -440,9 +583,32 @@ public class Appraisal extends JFrame {
 	}
 	
 	private void showPaperTable() {
-		String[] columnNames = {"No.", "Title", "Description", "Date of publication", "First Author", "Journals" };      
+		String[] columnNames = {"No.", "Title", "Description", "Date of publication", "First Author", "Journals" };   
 		
-		papersTable = new JTable(new String[][] {}, columnNames);
+		DateTimeFormatter parser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		
+		ArrayList<ResearchPaper> papers = controller.getPapers();
+		String[][] data = new String[papers.size()][6];
+		for(int i = 0; i < papers.size(); i++) {
+			ResearchPaper paper = papers.get(i);
+			data[i][0] = Integer.toString(i+1);
+			data[i][1] = paper.getTitle();
+			data[i][2] = paper.getDescription();
+			data[i][3] = formatter.format(LocalDate.parse(paper.getDate(), parser));
+			data[i][4] = paper.isFirstAuthor()?"Yes":"No";
+			data[i][5] = paper.getJournals();
+		}
+		
+		DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		};
+		
+		papersTable = new JTable(data, columnNames);
 		papersTable.setBounds(10, 11, 418, 300);
 		papersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		papersTable.getColumnModel().getColumn(0).setPreferredWidth(25);
@@ -452,9 +618,33 @@ public class Appraisal extends JFrame {
 		papersTable.getColumnModel().getColumn(5).setPreferredWidth(200);
 		JScrollPane sp=new JScrollPane(papersTable);
 		sp.setBounds(10, 11, 418, 300);
+		papersTable.setModel(model);
+		
+		papersTable.addMouseListener(new MouseAdapter() {
+		    public void mousePressed(MouseEvent mouseEvent) {
+		        JTable table =(JTable) mouseEvent.getSource();
+		        Point point = mouseEvent.getPoint();
+		        int row = table.rowAtPoint(point);
+		        if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+		        	ResearchPaper paper = controller.getPapers().get(table.getSelectedRow());
+		            panel.removeAll();
+		            showPaperForm();
+		            validate();
+		            repaint();
+		            editingMode = true;
+		            editIndex = table.getSelectedRow();
+		            txtTitle.setText(paper.getTitle());
+		            txtAreaDesc.setText(paper.getDescription());
+		            comboBoxFirstAuthor.setSelectedItem(paper.isFirstAuthor()?"Yes":"No");
+		            publicationDatePicker.setDate(LocalDate.parse(paper.getDate(), parser));
+		            txtAreaJournals.setText(paper.getJournals());
+		        }
+		    }
+		});
+		
 		panel.add(sp);
 		
-		JButton btnAddPaper = new JButton("Add Paper Entry");
+		JButton btnAddPaper = new JButton("Add Research Paper");
 		btnAddPaper.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.removeAll();
@@ -465,5 +655,35 @@ public class Appraisal extends JFrame {
 		});
 		btnAddPaper.setBounds(152, 339, 160, 23);
 		panel.add(btnAddPaper);
+	}
+	
+	public void setAppraisalData(boolean dataPresent, String name, String dept, String designation ) {
+		if(dataPresent) {
+			txtEmployeeName.setText(name);
+			txtEmployeeDept.setText(dept);
+			txtEmployeeDesignation.setText(designation);
+			txtEmployeeId.setText(employeeId);
+			setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(this,
+			        "No data found for employee ID: " + employeeId,
+			        "No data found",
+			        JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void showSQLConnectionError() {
+		JOptionPane.showMessageDialog(this,
+		        "Connection to MySQL database failed",
+		        "Connection failed",
+		        JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void showSuccessMessage() {
+		JOptionPane.showMessageDialog(this,
+		        "Appraisal Form Submitted Successfully.",
+		        "Success",
+		        JOptionPane.INFORMATION_MESSAGE);
+		setVisible(false);
 	}
 }

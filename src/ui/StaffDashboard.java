@@ -83,8 +83,8 @@ public class StaffDashboard extends JFrame {
 		JButton btnFillAppraisalForm = new JButton("Fill Appraisal Form");
 		btnFillAppraisalForm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Appraisal obj = new Appraisal();
-				obj.setVisible(true);
+				Appraisal obj = new Appraisal("16TS112");
+				//obj.setVisible(true);
 				//setVisible(false);
 			}
 		});
