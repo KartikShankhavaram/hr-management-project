@@ -102,7 +102,7 @@ public class ApplicationStatusNTS extends JFrame {
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
-		lblLeaveDetails.setBounds(208, 197, 94, 14);
+		lblLeaveDetails.setBounds(208, 197, 142, 14);
 		lblLeaveDetails.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");

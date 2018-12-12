@@ -106,44 +106,44 @@ public class LeaveApplication extends JFrame {
 		lblEmployeeName.setBounds(26, 53, 113, 14);
 		
 		JLabel lblDepartment = new JLabel("Department");
-		lblDepartment.setBounds(297, 53, 85, 14);
+		lblDepartment.setBounds(334, 139, 85, 14);
 		
 		JLabel lblEmployeeNo = new JLabel("Employee Id");
 		lblEmployeeNo.setBounds(26, 97, 113, 14);
 		
 		JLabel lblDate = new JLabel("Date");
-		lblDate.setBounds(297, 97, 85, 14);
+		lblDate.setBounds(334, 97, 85, 14);
 		
 		JLabel lblDesignation = new JLabel("Designation");
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
 		txtName = new JTextField();
 		txtName.setEditable(false);
-		txtName.setBounds(149, 50, 136, 20);
+		txtName.setBounds(149, 50, 202, 20);
 		txtName.setColumns(10);
 		
 		txtDepartment = new JTextField();
 		txtDepartment.setEditable(false);
-		txtDepartment.setBounds(387, 51, 86, 20);
+		txtDepartment.setBounds(427, 137, 86, 20);
 		txtDepartment.setColumns(10);
 		
 		txtEmployeeId = new JTextField();
 		txtEmployeeId.setEditable(false);
-		txtEmployeeId.setBounds(149, 94, 136, 20);
+		txtEmployeeId.setBounds(149, 94, 137, 20);
 		txtEmployeeId.setColumns(10);
 		
 		txtDate = new JTextField();
 		txtDate.setEditable(false);
-		txtDate.setBounds(387, 95, 86, 20);
+		txtDate.setBounds(427, 95, 86, 20);
 		txtDate.setColumns(10);
 		
 		txtDesignation = new JTextField();
 		txtDesignation.setEditable(false);
-		txtDesignation.setBounds(149, 136, 136, 20);
+		txtDesignation.setBounds(149, 136, 167, 20);
 		txtDesignation.setColumns(10);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
-		lblLeaveDetails.setBounds(229, 208, 94, 14);
+		lblLeaveDetails.setBounds(229, 208, 122, 14);
 		lblLeaveDetails.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");
