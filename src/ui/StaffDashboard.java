@@ -55,7 +55,7 @@ public class StaffDashboard extends JFrame {
 				//setVisible(false);
 			}
 		});
-		btnApplyForLeave.setBounds(53, 86, 143, 23);
+		btnApplyForLeave.setBounds(122, 29, 196, 23);
 		contentPane.add(btnApplyForLeave);
 		
 		JButton btnViewApplicationStatus = new JButton("View Application\n Status");
@@ -66,7 +66,7 @@ public class StaffDashboard extends JFrame {
 				//setVisible(false);
 			}
 		});
-		btnViewApplicationStatus.setBounds(227, 86, 171, 23);
+		btnViewApplicationStatus.setBounds(122, 80, 196, 23);
 		contentPane.add(btnViewApplicationStatus);
 		
 		JButton btnViewRemainingLeaves = new JButton("View Remaining Leaves");
@@ -77,7 +77,7 @@ public class StaffDashboard extends JFrame {
 				//setVisible(false);
 			}
 		});
-		btnViewRemainingLeaves.setBounds(227, 173, 171, 23);
+		btnViewRemainingLeaves.setBounds(122, 178, 196, 23);
 		contentPane.add(btnViewRemainingLeaves);
 		
 		JButton btnFillAppraisalForm = new JButton("Fill Appraisal Form");
@@ -88,7 +88,7 @@ public class StaffDashboard extends JFrame {
 				//setVisible(false);
 			}
 		});
-		btnFillAppraisalForm.setBounds(53, 173, 143, 23);
+		btnFillAppraisalForm.setBounds(122, 131, 196, 23);
 		contentPane.add(btnFillAppraisalForm);
 		
 	}

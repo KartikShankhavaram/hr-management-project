@@ -49,7 +49,7 @@ public class LoginPage extends JFrame {
 				setVisible(false);
 			}
 		});
-		btnLoginAsStaff.setBounds(51, 80, 117, 23);
+		btnLoginAsStaff.setBounds(144, 45, 158, 23);
 		contentPane.add(btnLoginAsStaff);
 		
 		JButton btnLoginAsDofa = new JButton("Login as DOFA");
@@ -60,19 +60,8 @@ public class LoginPage extends JFrame {
 				setVisible(false);
 			}
 		});
-		btnLoginAsDofa.setBounds(258, 80, 117, 23);
+		btnLoginAsDofa.setBounds(144, 90, 158, 23);
 		contentPane.add(btnLoginAsDofa);
-		
-		JButton btnLoginAsDorc = new JButton("Login as DORC");
-		btnLoginAsDorc.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				LeaveApplicationDecision obj = new LeaveApplicationDecision();
-				obj.setVisible(true);
-				setVisible(false);
-			}
-		});
-		btnLoginAsDorc.setBounds(51, 161, 117, 23);
-		contentPane.add(btnLoginAsDorc);
 		
 		JButton btnLoginAsDirector = new JButton("Login as Director");
 		btnLoginAsDirector.addActionListener(new ActionListener() {
@@ -82,12 +71,20 @@ public class LoginPage extends JFrame {
 				setVisible(false);
 			}
 		});
-		btnLoginAsDirector.setBounds(258, 161, 117, 23);
+		btnLoginAsDirector.setBounds(144, 180, 158, 23);
 		contentPane.add(btnLoginAsDirector);
 		
 		JLabel lblLnmiit = new JLabel("LNMIIT");
 		lblLnmiit.setBounds(190, 11, 46, 14);
 		contentPane.add(lblLnmiit);
+		
+		JButton button = new JButton("Login as HOD");
+		button.setBounds(144, 134, 158, 23);
+		contentPane.add(button);
+		
+		JButton button_1 = new JButton("Login as Registrar");
+		button_1.setBounds(144, 224, 158, 23);
+		contentPane.add(button_1);
 		
 		
 	}

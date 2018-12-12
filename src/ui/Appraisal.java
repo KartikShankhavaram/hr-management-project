@@ -115,53 +115,50 @@ public class Appraisal extends JFrame {
 		contentPane.add(lblAppraisal);
 		
 		JLabel lblEmployeeName = new JLabel("Employee Name");
-		lblEmployeeName.setBounds(32, 78, 95, 14);
+		lblEmployeeName.setBounds(32, 78, 138, 14);
 		contentPane.add(lblEmployeeName);
 		
 		JLabel lblEmployeeNo = new JLabel("Employee No");
-		lblEmployeeNo.setBounds(32, 128, 77, 14);
+		lblEmployeeNo.setBounds(32, 128, 121, 14);
 		contentPane.add(lblEmployeeNo);
 		
 		JLabel lblDepartment = new JLabel("Department");
-		lblDepartment.setBounds(242, 78, 77, 14);
+		lblDepartment.setBounds(32, 171, 121, 14);
 		contentPane.add(lblDepartment);
 		
 		JLabel lblDesignation = new JLabel("Designation");
-		lblDesignation.setBounds(242, 128, 77, 14);
+		lblDesignation.setBounds(32, 218, 138, 14);
 		contentPane.add(lblDesignation);
 		
 		txtEmployeeName = new JTextField();
 		txtEmployeeName.setEditable(false);
-		txtEmployeeName.setBounds(137, 75, 86, 20);
+		txtEmployeeName.setBounds(188, 76, 173, 20);
 		contentPane.add(txtEmployeeName);
 		txtEmployeeName.setColumns(10);
 		
 		txtEmployeeDept = new JTextField();
 		txtEmployeeDept.setEditable(false);
-		txtEmployeeDept.setBounds(329, 75, 86, 20);
+		txtEmployeeDept.setBounds(188, 169, 173, 20);
 		contentPane.add(txtEmployeeDept);
 		txtEmployeeDept.setColumns(10);
 		
 		txtEmployeeId = new JTextField();
 		txtEmployeeId.setEditable(false);
-		txtEmployeeId.setBounds(137, 125, 86, 20);
+		txtEmployeeId.setBounds(188, 126, 173, 20);
 		contentPane.add(txtEmployeeId);
 		txtEmployeeId.setColumns(10);
 		
 		txtEmployeeDesignation = new JTextField();
 		txtEmployeeDesignation.setEditable(false);
-		txtEmployeeDesignation.setBounds(329, 125, 86, 20);
+		txtEmployeeDesignation.setBounds(188, 216, 173, 20);
 		contentPane.add(txtEmployeeDesignation);
 		txtEmployeeDesignation.setColumns(10);
 		
 		lblHOD = new JLabel("HOD");
-		lblHOD.setBounds(32, 233, 132, 14);
+		lblHOD.setBounds(32, 277, 121, 14);
 		contentPane.add(lblHOD);
-		
-		JTextArea txtAreaHOD = new JTextArea();
-		txtAreaHOD.setLineWrap(true);
-		JScrollPane spHOD = new JScrollPane(txtAreaHOD);
-		spHOD.setBounds(151, 233, 278, 50);
+		JScrollPane spHOD = new JScrollPane();
+		spHOD.setBounds(161, 274, 278, 50);
 		contentPane.add(spHOD);
 		
 		JLabel lblWhatToAdd = new JLabel("What to add?");
@@ -197,13 +194,10 @@ public class Appraisal extends JFrame {
 		contentPane.add(rdbtnConference);
 		
 		JLabel lblFacultyMentor = new JLabel("Faculty Mentor");
-		lblFacultyMentor.setBounds(32, 304, 132, 15);
+		lblFacultyMentor.setBounds(32, 347, 121, 15);
 		contentPane.add(lblFacultyMentor);
-		
-		JTextArea txtAreaFM = new JTextArea();
-		txtAreaFM.setLineWrap(true);
-		JScrollPane spFM = new JScrollPane(txtAreaFM);
-		spFM.setBounds(161, 304, 278, 44);
+		JScrollPane spFM = new JScrollPane();
+		spFM.setBounds(161, 347, 278, 44);
 		contentPane.add(spFM);
 		
 		JButton btnSubmitAppraisalForm = new JButton("Submit Appraisal Form");
@@ -214,7 +208,7 @@ public class Appraisal extends JFrame {
 				controller.submitAppraisalForm();
 			}
 		});
-		btnSubmitAppraisalForm.setBounds(109, 525, 210, 25);
+		btnSubmitAppraisalForm.setBounds(151, 504, 210, 25);
 		contentPane.add(btnSubmitAppraisalForm);
 		
 		rdbtnConference.addActionListener(new ActionListener() {
@@ -233,6 +227,16 @@ public class Appraisal extends JFrame {
 		controller = new Appraisal_Controller(employeeId, this);
 		showPaperTable();
         rdbtnPaper.setSelected(true);
+        
+        JTextArea txtAreaFM = new JTextArea();
+        txtAreaFM.setBounds(161, 347, 275, 41);
+        contentPane.add(txtAreaFM);
+        txtAreaFM.setLineWrap(true);
+        
+        JTextArea txtAreaHOD = new JTextArea();
+        txtAreaHOD.setBounds(161, 277, 275, 47);
+        contentPane.add(txtAreaHOD);
+        txtAreaHOD.setLineWrap(true);
 	}
 	
 	private void showConferenceForm() {

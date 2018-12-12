@@ -95,19 +95,19 @@ public class LeaveApplicationReview extends JFrame {
 		lblEmployeeName.setBounds(26, 53, 113, 14);
 		
 		JLabel lblDepartment = new JLabel("Department");
-		lblDepartment.setBounds(265, 53, 85, 14);
+		lblDepartment.setBounds(312, 139, 85, 14);
 		
 		JLabel lblEmployeeId = new JLabel("Employee No");
 		lblEmployeeId.setBounds(26, 97, 113, 14);
 		
 		JLabel lblDate = new JLabel("Date");
-		lblDate.setBounds(265, 97, 85, 14);
+		lblDate.setBounds(312, 97, 85, 14);
 		
 		JLabel lblDesignation = new JLabel("Designation");
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
-		lblLeaveDetails.setBounds(208, 182, 94, 14);
+		lblLeaveDetails.setBounds(208, 182, 113, 14);
 		lblLeaveDetails.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");
@@ -119,7 +119,7 @@ public class LeaveApplicationReview extends JFrame {
 		lblFrom.setBounds(26, 297, 46, 24);
 		
 		JLabel lblTo = new JLabel("To");
-		lblTo.setBounds(239, 297, 46, 24);
+		lblTo.setBounds(288, 297, 46, 24);
 		
 		JLabel lblTotalNoOf = new JLabel("Total no. of days");
 		lblTotalNoOf.setBounds(26, 339, 113, 14);
@@ -148,43 +148,43 @@ public class LeaveApplicationReview extends JFrame {
 		contentPane.add(numberOfLeaveDays);
 		
 		JLabel lblEName = new JLabel("");
-		lblEName.setBounds(149, 53, 86, 14);
+		lblEName.setBounds(149, 53, 185, 14);
 		contentPane.add(lblEName);
 		
 		JLabel lblEId = new JLabel("");
-		lblEId.setBounds(149, 97, 86, 14);
+		lblEId.setBounds(149, 97, 151, 14);
 		contentPane.add(lblEId);
 		
 		JLabel lblEDesignation = new JLabel("");
-		lblEDesignation.setBounds(149, 139, 86, 14);
+		lblEDesignation.setBounds(149, 139, 164, 14);
 		contentPane.add(lblEDesignation);
 		
 		JLabel lblEDept = new JLabel("");
-		lblEDept.setBounds(360, 53, 86, 14);
+		lblEDept.setBounds(410, 139, 86, 14);
 		contentPane.add(lblEDept);
 		
 		JLabel lblEAppDate = new JLabel("");
-		lblEAppDate.setBounds(360, 97, 85, 14);
+		lblEAppDate.setBounds(410, 97, 85, 14);
 		contentPane.add(lblEAppDate);
 		
 		JLabel lblETypeOfLeave = new JLabel("");
-		lblETypeOfLeave.setBounds(149, 254, 65, 14);
+		lblETypeOfLeave.setBounds(149, 254, 94, 14);
 		contentPane.add(lblETypeOfLeave);
 		
 		JLabel lblUrgent = new JLabel("Urgent ");
-		lblUrgent.setBounds(284, 254, 46, 14);
+		lblUrgent.setBounds(284, 254, 85, 14);
 		contentPane.add(lblUrgent);
 		
 		JLabel labelEUrgent = new JLabel("");
-		labelEUrgent.setBounds(368, 254, 59, 14);
+		labelEUrgent.setBounds(402, 254, 59, 14);
 		contentPane.add(labelEUrgent);
 		
 		JLabel lblEEndDate = new JLabel("");
-		lblEEndDate.setBounds(332, 302, 111, 14);
+		lblEEndDate.setBounds(372, 302, 111, 14);
 		contentPane.add(lblEEndDate);
 		
 		JLabel lblEStartDate = new JLabel("");
-		lblEStartDate.setBounds(95, 302, 100, 14);
+		lblEStartDate.setBounds(149, 302, 100, 14);
 		contentPane.add(lblEStartDate);
 		
 		JLabel lblNewLabel_10 = new JLabel("");
@@ -205,11 +205,11 @@ public class LeaveApplicationReview extends JFrame {
 		contentPane.add(lblHodsApproval);
 		
 		JLabel lblDofa = new JLabel("DoFA's approval");
-		lblDofa.setBounds(26, 526, 79, 14);
+		lblDofa.setBounds(26, 526, 113, 14);
 		contentPane.add(lblDofa);
 		
 		JLabel lblDirector = new JLabel("Director's Approval");
-		lblDirector.setBounds(285, 476, 100, 14);
+		lblDirector.setBounds(239, 476, 141, 14);
 		contentPane.add(lblDirector);
 		
 		JLabel lblHodApproval = new JLabel("Pending");
@@ -221,7 +221,7 @@ public class LeaveApplicationReview extends JFrame {
 		contentPane.add(lblDofaApproval);
 		
 		JLabel lblDirectorApproval = new JLabel("Pending");
-		lblDirectorApproval.setBounds(415, 476, 46, 14);
+		lblDirectorApproval.setBounds(392, 476, 69, 14);
 		contentPane.add(lblDirectorApproval);
 		
 		JButton button = new JButton("Approve ");
@@ -230,7 +230,7 @@ public class LeaveApplicationReview extends JFrame {
 				approveApplication();
 			}
 		});
-		button.setBounds(71, 576, 89, 23);
+		button.setBounds(71, 576, 100, 23);
 		contentPane.add(button);
 		
 		JButton btnReject = new JButton("Reject ");

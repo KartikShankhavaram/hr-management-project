@@ -77,7 +77,7 @@ public class ApplicationStatusNTS extends JFrame {
 		this.application = application;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 507, 615);
+		setBounds(100, 100, 546, 615);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -90,13 +90,13 @@ public class ApplicationStatusNTS extends JFrame {
 		lblEmployeeName.setBounds(26, 53, 113, 14);
 		
 		JLabel lblDepartment = new JLabel("Department");
-		lblDepartment.setBounds(265, 53, 85, 14);
+		lblDepartment.setBounds(284, 139, 85, 14);
 		
 		JLabel lblEmployeeId = new JLabel("Employee ID");
 		lblEmployeeId.setBounds(26, 97, 113, 14);
 		
 		JLabel lblDate = new JLabel("Date");
-		lblDate.setBounds(265, 97, 85, 14);
+		lblDate.setBounds(284, 97, 66, 14);
 		
 		JLabel lblDesignation = new JLabel("Designation");
 		lblDesignation.setBounds(26, 139, 113, 14);
@@ -114,7 +114,7 @@ public class ApplicationStatusNTS extends JFrame {
 		lblFrom.setBounds(26, 297, 46, 24);
 		
 		JLabel lblTo = new JLabel("To");
-		lblTo.setBounds(239, 297, 46, 24);
+		lblTo.setBounds(284, 297, 46, 24);
 		
 		JLabel lblTotalNoOf = new JLabel("Total no. of days");
 		lblTotalNoOf.setBounds(26, 339, 113, 14);
@@ -141,7 +141,7 @@ public class ApplicationStatusNTS extends JFrame {
 		contentPane.add(numberOfLeaveDays);
 		
 		JLabel lblEName = new JLabel("");
-		lblEName.setBounds(149, 53, 86, 14);
+		lblEName.setBounds(149, 53, 201, 14);
 		contentPane.add(lblEName);
 		
 		JLabel lblEId = new JLabel("");
@@ -149,23 +149,23 @@ public class ApplicationStatusNTS extends JFrame {
 		contentPane.add(lblEId);
 		
 		JLabel lblEDesignation = new JLabel("");
-		lblEDesignation.setBounds(149, 139, 86, 14);
+		lblEDesignation.setBounds(149, 139, 123, 14);
 		contentPane.add(lblEDesignation);
 		
 		JLabel lblEDept = new JLabel("");
-		lblEDept.setBounds(360, 53, 86, 14);
+		lblEDept.setBounds(381, 139, 85, 14);
 		contentPane.add(lblEDept);
 		
 		JLabel lblEAppDate = new JLabel("");
-		lblEAppDate.setBounds(360, 97, 85, 14);
+		lblEAppDate.setBounds(381, 97, 85, 14);
 		contentPane.add(lblEAppDate);
 		
 		JLabel lblETypeOfLeave = new JLabel("");
-		lblETypeOfLeave.setBounds(149, 254, 65, 14);
+		lblETypeOfLeave.setBounds(149, 254, 94, 14);
 		contentPane.add(lblETypeOfLeave);
 		
 		JLabel lblUrgent = new JLabel("Urgent ");
-		lblUrgent.setBounds(284, 254, 46, 14);
+		lblUrgent.setBounds(284, 254, 66, 14);
 		contentPane.add(lblUrgent);
 		
 		JLabel labelEUrgent = new JLabel("");
@@ -173,11 +173,11 @@ public class ApplicationStatusNTS extends JFrame {
 		contentPane.add(labelEUrgent);
 		
 		JLabel lblEEndDate = new JLabel("");
-		lblEEndDate.setBounds(332, 302, 111, 14);
+		lblEEndDate.setBounds(372, 302, 111, 14);
 		contentPane.add(lblEEndDate);
 		
 		JLabel lblEStartDate = new JLabel("");
-		lblEStartDate.setBounds(95, 302, 100, 14);
+		lblEStartDate.setBounds(149, 302, 100, 14);
 		contentPane.add(lblEStartDate);
 		
 		JLabel lblNewLabel_10 = new JLabel("");
@@ -194,19 +194,19 @@ public class ApplicationStatusNTS extends JFrame {
 		contentPane.add(lblEReason);
 		
 		JLabel lblHodsApproval = new JLabel("Registrar's Approval");
-		lblHodsApproval.setBounds(26, 476, 113, 14);
+		lblHodsApproval.setBounds(26, 476, 156, 14);
 		contentPane.add(lblHodsApproval);
 		
 		JLabel lblDirector = new JLabel("Director's Approval");
-		lblDirector.setBounds(285, 476, 100, 14);
+		lblDirector.setBounds(285, 476, 142, 14);
 		contentPane.add(lblDirector);
 		
 		JLabel lblRegApproval = new JLabel("Pending");
-		lblRegApproval.setBounds(149, 476, 85, 14);
+		lblRegApproval.setBounds(187, 476, 85, 14);
 		contentPane.add(lblRegApproval);
 		
 		JLabel lblDirectorApproval = new JLabel("Pending");
-		lblDirectorApproval.setBounds(415, 476, 46, 14);
+		lblDirectorApproval.setBounds(437, 476, 71, 14);
 		contentPane.add(lblDirectorApproval);
 		
 		getEmployeeDetails();
