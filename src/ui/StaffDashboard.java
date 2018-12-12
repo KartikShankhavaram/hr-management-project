@@ -50,7 +50,7 @@ public class StaffDashboard extends JFrame {
 		JButton btnApplyForLeave = new JButton("Apply for Leave");
 		btnApplyForLeave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				LeaveApplication obj = new LeaveApplication();
+				LeaveApplication obj = new LeaveApplication("16TS112");
 				obj.setVisible(true);
 				//setVisible(false);
 			}
@@ -72,7 +72,7 @@ public class StaffDashboard extends JFrame {
 		JButton btnViewRemainingLeaves = new JButton("View Remaining Leaves");
 		btnViewRemainingLeaves.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				RemainingLeaves obj = new RemainingLeaves();
+				LeavesTaken obj = new LeavesTaken("16TS112");
 				obj.setVisible(true);
 				//setVisible(false);
 			}

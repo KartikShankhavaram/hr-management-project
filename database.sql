@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS Employee ( EID varchar(10) NOT NULL, Title varchar(64
 
 CREATE TABLE IF NOT EXISTS Roles( RID int NOT NULL, PRIMARY KEY(RID), EID varchar(10) NOT NULL, FOREIGN KEY(EID) REFERENCES Employee(EID), Role_Title varchar(64) NOT NULL, Privileges varchar(100), Email_Id char(50) NOT NULL);
 
-CREATE TABLE IF NOT EXISTS Leave_Applications ( AID int NOT NULL, PRIMARY KEY(AID), EID varchar(10) NOT NULL, FOREIGN KEY (EID) REFERENCES Employee(EID), RID int NOT NULL,  FOREIGN KEY (RID) REFERENCES Roles(RID), Type_Of_Leave varchar(64) NOT NULL, Reason_For_Leave  varchar(255) NOT NULL, Start_Date DATE NOT NULL, End_Date DATE NOT NULL, Is_Approved TINYINT(1) DEFAULT 0)
+CREATE TABLE IF NOT EXISTS Leave_Applications ( AID int NOT NULL, PRIMARY KEY(AID), EID varchar(10) NOT NULL, FOREIGN KEY (EID) REFERENCES Employee(EID), Application_Date DATE NOT NULL, Type_Of_Leave varchar(64) NOT NULL, Reason_For_Leave  varchar(255) NOT NULL, Start_Date DATE NOT NULL, End_Date DATE NOT NULL, HOD_Status TINYINT(1), Registrar_Status TINYINT(1), DOFA_Status TINYINT(1), Director_Status TINYINT(1), Application_Status TINYINT(1) DEFAULT 2)
 
 CREATE TABLE IF NOT EXISTS Non_Teaching_staff( EID varchar(10) NOT NULL, FOREIGN KEY(EID) REFERENCES Employee(EID), Office varchar(64) NOT NULL);
 
 CREATE TABLE IF NOT EXISTS Teaching_Staff( EID varchar(10) NOT NULL, FOREIGN KEY(EID) REFERENCES Employee(EID), Department varchar(64) NOT NULL, Research_Topics varchar(255), Committees varchar(255));
 
-CREATE TABLE IF NOT EXISTS Leaves_Left( EID varchar(10) NOT NULL, FOREIGN KEY(EID) REFERENCES Employee(EID), CL_left int NOT NULL, PL_left int NOT NULL, CCL_left int NOT NULL);
+CREATE TABLE IF NOT EXISTS Leaves_Left( EID varchar(10) NOT NULL, FOREIGN KEY(EID) REFERENCES Employee(EID), CL varchar(10) NOT NULL, PL varchar(10) NOT NULL, CCL varchar(10) NOT NULL, ODL varchar(10) NOT NULL);
 
 CREATE TABLE IF NOT EXISTS Appraisal( EID varchar(10) NOT NULL, FOREIGN KEY(EID) REFERENCES Employee(EID), Head_Of_Department varchar(100), Faculty_Mentor varchar(100));
                                                                                                                                                                                                                                                         

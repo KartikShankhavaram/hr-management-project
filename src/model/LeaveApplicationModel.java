@@ -3,32 +3,43 @@
  */
 package model;
 
+import java.time.LocalDate;
+
 /**
  * @author Kartik Shankhavaram
  *
  */
-public class LeaveApplicationObject {
+public class LeaveApplicationModel {
+	private int applicationId;
 	private String employeeName;
 	private String employeeDept;
-	private String employeeNo;
-	private String applicationDate;
+	private String employeeId;
+	private LocalDate applicationDate;
 	private String designation;
 	private String typeOfLeave;
 	private boolean isUrgent;
-	private String startDate;
-	private String endDate;
-	private int totalDays;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private long totalDays;
 	private String appliedTo;
 	private String leaveReason;
-	private boolean isApproved;
+	private int hodStatus;
+	private int registrarStatus;
+	private int dofaStatus;
+	private int directorStatus;
+	private int applicationStatus;
+	
+	public LeaveApplicationModel(String employeeId) {
+		this.employeeId = employeeId;
+	}
 
-	public LeaveApplicationObject(String employeeName, String employeeDept, String employeeNo, String applicationDate,
-			String designation, String typeOfLeave, boolean isUrgent, String startDate, String endDate, int totalDays,
+	public LeaveApplicationModel(String employeeName, String employeeDept, String employeeId, LocalDate applicationDate,
+			String designation, String typeOfLeave, boolean isUrgent, LocalDate startDate, LocalDate endDate, long totalDays,
 			String appliedTo, String leaveReason) {
 		super();
 		this.employeeName = employeeName;
 		this.employeeDept = employeeDept;
-		this.employeeNo = employeeNo;
+		this.employeeId = employeeId;
 		this.applicationDate = applicationDate;
 		this.designation = designation;
 		this.typeOfLeave = typeOfLeave;
@@ -40,13 +51,13 @@ public class LeaveApplicationObject {
 		this.leaveReason = leaveReason;
 	}
 
-	public LeaveApplicationObject(String employeeName, String employeeDept, String employeeNo, String applicationDate,
-			String designation, String typeOfLeave, boolean isUrgent, String startDate, String endDate, int totalDays,
-			String appliedTo, String leaveReason, boolean isApproved) {
+	public LeaveApplicationModel(String employeeName, String employeeDept, String employeeId, LocalDate applicationDate,
+			String designation, String typeOfLeave, boolean isUrgent, LocalDate startDate, LocalDate endDate, long totalDays,
+			String appliedTo, String leaveReason, int applicationStatus) {
 		super();
 		this.employeeName = employeeName;
 		this.employeeDept = employeeDept;
-		this.employeeNo = employeeNo;
+		this.employeeId = employeeId;
 		this.applicationDate = applicationDate;
 		this.designation = designation;
 		this.typeOfLeave = typeOfLeave;
@@ -56,7 +67,7 @@ public class LeaveApplicationObject {
 		this.totalDays = totalDays;
 		this.appliedTo = appliedTo;
 		this.leaveReason = leaveReason;
-		this.isApproved = isApproved;
+		this.applicationStatus = applicationStatus;
 	}
 
 
@@ -77,19 +88,19 @@ public class LeaveApplicationObject {
 		this.employeeDept = employeeDept;
 	}
 
-	public String getEmployeeNo() {
-		return employeeNo;
+	public String getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setEmployeeNo(String employeeNo) {
-		this.employeeNo = employeeNo;
+	public void getEmployeeId(String employeeId) {
+		this.employeeId = employeeId;
 	}
 
-	public String getApplicationDate() {
+	public LocalDate getApplicationDate() {
 		return applicationDate;
 	}
 
-	public void setApplicationDate(String applicationDate) {
+	public void setApplicationDate(LocalDate applicationDate) {
 		this.applicationDate = applicationDate;
 	}
 
@@ -117,27 +128,27 @@ public class LeaveApplicationObject {
 		this.isUrgent = isUrgent;
 	}
 
-	public String getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
 
-	public String getEndDate() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(String endDate) {
+	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 
-	public int getTotalDays() {
+	public long getTotalDays() {
 		return totalDays;
 	}
 
-	public void setTotalDays(int totalDays) {
+	public void setTotalDays(long totalDays) {
 		this.totalDays = totalDays;
 	}
 
@@ -157,21 +168,61 @@ public class LeaveApplicationObject {
 		this.leaveReason = leaveReason;
 	}
 
-	public boolean isApproved() {
-		return isApproved;
+	public int getApplicationStatus() {
+		return applicationStatus;
 	}
 
-	public void setApproved(boolean isApproved) {
-		this.isApproved = isApproved;
+	public void setApplicationStatus(int applicationStatus) {
+		this.applicationStatus = applicationStatus;
+	}
+
+	public int getHodStatus() {
+		return hodStatus;
+	}
+
+	public void setHodStatus(int hodStatus) {
+		this.hodStatus = hodStatus;
+	}
+
+	public int getRegistrarStatus() {
+		return registrarStatus;
+	}
+
+	public void setRegistrarStatus(int registrarStatus) {
+		this.registrarStatus = registrarStatus;
+	}
+
+	public int getDofaStatus() {
+		return dofaStatus;
+	}
+
+	public void setDofaStatus(int dofaStatus) {
+		this.dofaStatus = dofaStatus;
+	}
+
+	public int getDirectorStatus() {
+		return directorStatus;
+	}
+
+	public void setDirectorStatus(int directorStatus) {
+		this.directorStatus = directorStatus;
+	}
+
+	public int getApplicationId() {
+		return applicationId;
+	}
+
+	public void setApplicationId(int applicationId) {
+		this.applicationId = applicationId;
 	}
 
 	@Override
 	public String toString() {
 		return "LeaveApplicationObject [employeeName=" + employeeName + ", employeeDept=" + employeeDept
-				+ ", employeeNo=" + employeeNo + ", applicationDate=" + applicationDate + ", designation=" + designation
+				+ ", employeeNo=" + employeeId + ", applicationDate=" + applicationDate + ", designation=" + designation
 				+ ", typeOfLeave=" + typeOfLeave + ", isUrgent=" + isUrgent + ", startDate=" + startDate + ", endDate="
 				+ endDate + ", totalDays=" + totalDays + ", appliedTo=" + appliedTo + ", leaveReason=" + leaveReason
-				+ ", isApproved=" + isApproved + "]";
+				+ ", applicationStatus=" + applicationStatus + "]";
 	}
 	
 }

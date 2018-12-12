@@ -11,8 +11,14 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
+import model.LeaveApplicationModel;
+import model.LeaveRecordModel;
+import utils.Constants;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -21,7 +27,15 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,12 +55,20 @@ public class LeaveApplication extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-
+	private JTextField txtName;
+	private JTextField txtDepartment;
+	private JTextField txtEmployeeId;
+	private JTextField txtDate;
+	private JTextField txtDesignation;
+	private JComboBox<String> comboBoxLeaveType;
+	private JTextArea txtAreaReason;
+	private JLabel numberOfLeaveDays;
+	private DatePicker startDate;
+	private DatePicker endDate;
+	private JCheckBox chckbxUrgent;
+	private String employeeId;
+	private LeaveApplicationModel model;
+	private boolean teachingStaff;
 	/**
 	 * Launch the application.
 	 */
@@ -54,8 +76,8 @@ public class LeaveApplication extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LeaveApplication frame = new LeaveApplication();
-					frame.setVisible(true);
+					LeaveApplication frame = new LeaveApplication("13NTS003");
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -66,12 +88,15 @@ public class LeaveApplication extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LeaveApplication() {
+	public LeaveApplication(String employeeId) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 525, 558);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		
+		this.employeeId = employeeId;
+		model = new LeaveApplicationModel(employeeId);
 		
 		JLabel lblNewLabel = new JLabel("Leave Application Form");
 		lblNewLabel.setBounds(181, 11, 303, 19);
@@ -92,25 +117,30 @@ public class LeaveApplication extends JFrame {
 		JLabel lblDesignation = new JLabel("Designation");
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
-		textField = new JTextField();
-		textField.setBounds(149, 50, 86, 20);
-		textField.setColumns(10);
+		txtName = new JTextField();
+		txtName.setEditable(false);
+		txtName.setBounds(149, 50, 86, 20);
+		txtName.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(360, 50, 86, 20);
-		textField_1.setColumns(10);
+		txtDepartment = new JTextField();
+		txtDepartment.setEditable(false);
+		txtDepartment.setBounds(360, 50, 86, 20);
+		txtDepartment.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(149, 94, 86, 20);
-		textField_2.setColumns(10);
+		txtEmployeeId = new JTextField();
+		txtEmployeeId.setEditable(false);
+		txtEmployeeId.setBounds(149, 94, 86, 20);
+		txtEmployeeId.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(360, 94, 86, 20);
-		textField_3.setColumns(10);
+		txtDate = new JTextField();
+		txtDate.setEditable(false);
+		txtDate.setBounds(360, 94, 86, 20);
+		txtDate.setColumns(10);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(149, 136, 86, 20);
-		textField_4.setColumns(10);
+		txtDesignation = new JTextField();
+		txtDesignation.setEditable(false);
+		txtDesignation.setBounds(149, 136, 86, 20);
+		txtDesignation.setColumns(10);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
 		lblLeaveDetails.setBounds(229, 208, 94, 14);
@@ -119,10 +149,10 @@ public class LeaveApplication extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");
 		lblNewLabel_1.setBounds(26, 254, 113, 14);
 		
-		String[] leaves = new String[] {"PL", "CL", "ODL", "OL"};
+		String[] leaves = new String[] {"PL", "CL", "CCL", "ODL", "OL"};
 		
-		JComboBox<String> comboBox = new JComboBox(leaves);
-		comboBox.setBounds(149, 251, 86, 20);
+		comboBoxLeaveType = new JComboBox(leaves);
+		comboBoxLeaveType.setBounds(149, 251, 86, 20);
 		
 		JLabel lblFrom = new JLabel("From");
 		lblFrom.setBounds(26, 297, 46, 24);
@@ -136,15 +166,20 @@ public class LeaveApplication extends JFrame {
 		JLabel lblReason = new JLabel("Reason");
 		lblReason.setBounds(26, 386, 54, 24);
 		
-		JTextArea reasonTextArea = new JTextArea();
-		reasonTextArea.setRows(3);
-		reasonTextArea.setBounds(95, 381, 351, 61);
-		reasonTextArea.setLineWrap(true);
+		txtAreaReason = new JTextArea();
+		txtAreaReason.setRows(3);
+		txtAreaReason.setBounds(95, 381, 351, 61);
+		txtAreaReason.setLineWrap(true);
 		
 		JButton btnGoToAppraisal = new JButton("Submit Leave Application");
+		btnGoToAppraisal.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				submitApplication();
+			}
+		});
 		btnGoToAppraisal.setBounds(166, 468, 180, 23);
 		
-		JLabel numberOfLeaveDays = new JLabel("1");
+		numberOfLeaveDays = new JLabel("1");
 		numberOfLeaveDays.setBounds(149, 339, 46, 14);
 		
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -159,7 +194,7 @@ public class LeaveApplication extends JFrame {
         startDateSettings.setAllowKeyboardEditing(false);
         
         
-		DatePicker startDate = new DatePicker(startDateSettings);
+		startDate = new DatePicker(startDateSettings);
 		startDate.setBounds(72, 297, 160, 24);
 		startDate.getComponentToggleCalendarButton().setBounds(136, 0, 24, 24);
 		startDate.getComponentDateTextField().setBounds(0, 0, 136, 24);
@@ -171,7 +206,7 @@ public class LeaveApplication extends JFrame {
 		startDateSettings.setDateRangeLimits(LocalDate.now().plusDays(7), null);
 		
 		DatePickerSettings endDateSettings = startDateSettings.copySettings();
-		DatePicker endDate = new DatePicker(endDateSettings);
+		endDate = new DatePicker(endDateSettings);
 		endDate.setBounds(285, 297, 160, 24);
 		endDate.getComponentToggleCalendarButton().setBounds(136, 0, 24, 24);
 		endDate.getComponentDateTextField().setBounds(0, 0, 136, 24);
@@ -206,7 +241,7 @@ public class LeaveApplication extends JFrame {
 			}
 		});
 		
-		JCheckBox chckbxUrgent = new JCheckBox("Urgent");
+		chckbxUrgent = new JCheckBox("Urgent");
 		chckbxUrgent.setBounds(285, 250, 97, 23);
 		chckbxUrgent.addActionListener(new ActionListener() {
 			
@@ -215,6 +250,27 @@ public class LeaveApplication extends JFrame {
 				// TODO Auto-generated method stub
 				int minDays = 7;
 				if(chckbxUrgent.isSelected()) {
+					minDays = 0;
+				}
+				if(!comboBoxLeaveType.getSelectedItem().equals("PL")) {
+					minDays = 0;
+				}
+				startDateSettings.setDateRangeLimits(LocalDate.now().plusDays(minDays), null);
+				endDateSettings.setDateRangeLimits(LocalDate.now().plusDays(minDays), null);
+				startDate.setDate(LocalDate.now().plusDays(minDays));
+				endDate.setDate(LocalDate.now().plusDays(minDays));
+			}
+		});
+		
+		comboBoxLeaveType.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				// TODO Auto-generated method stub
+				int minDays;
+				if(comboBoxLeaveType.getSelectedItem().equals("PL")) {
+					minDays = 7;
+				} else {
 					minDays = 0;
 				}
 				startDateSettings.setDateRangeLimits(LocalDate.now().plusDays(minDays), null);
@@ -227,28 +283,253 @@ public class LeaveApplication extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.add(lblNewLabel);
 		contentPane.add(lblEmployeeName);
-		contentPane.add(textField);
+		contentPane.add(txtName);
 		contentPane.add(lblDepartment);
-		contentPane.add(textField_1);
+		contentPane.add(txtDepartment);
 		contentPane.add(lblEmployeeNo);
-		contentPane.add(textField_2);
+		contentPane.add(txtEmployeeId);
 		contentPane.add(lblDate);
-		contentPane.add(textField_3);
+		contentPane.add(txtDate);
 		contentPane.add(lblDesignation);
-		contentPane.add(textField_4);
+		contentPane.add(txtDesignation);
 		contentPane.add(lblLeaveDetails);
 		contentPane.add(lblNewLabel_1);
-		contentPane.add(comboBox);
+		contentPane.add(comboBoxLeaveType);
 		contentPane.add(startDate);
 		contentPane.add(endDate);
 		contentPane.add(lblFrom);
 		contentPane.add(lblTo);
 		contentPane.add(lblTotalNoOf);
 		contentPane.add(lblReason);
-		contentPane.add(reasonTextArea);
+		contentPane.add(txtAreaReason);
 		contentPane.add(btnGoToAppraisal);
 		contentPane.add(numberOfLeaveDays);
 		contentPane.add(chckbxUrgent);
 		
+		fetchEmployeeDetails();
+	}
+	
+	private void fetchEmployeeDetails() {
+		Connection conn = null;
+		PreparedStatement stmt1 = null;
+		PreparedStatement stmt2 = null;
+		try {
+		Class.forName(Constants.JDBC_DRIVER);
+		conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
+		String query1 = "SELECT Title, Name, Designation, Office FROM Employee e, Non_Teaching_staff n WHERE e.EID = n.EID AND e.EID = ?;";
+		String query2 = "SELECT Title, Name, Designation, Department FROM Employee e, Teaching_Staff t WHERE e.EID = t.EID AND e.EID = ?;";
+		stmt1 = conn.prepareStatement(query1);
+		stmt1.setString(1, employeeId);
+		stmt2 = conn.prepareStatement(query2);
+		stmt2.setString(1, employeeId);
+		ResultSet rs1 = stmt1.executeQuery();
+		ResultSet rs2 = stmt2.executeQuery();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		if(rs1.next()) {
+			txtName.setText(rs1.getString("Title") + " " + rs1.getString("Name"));
+			model.setEmployeeName(rs1.getString("Title") + " " + rs1.getString("Name"));
+			txtEmployeeId.setText(employeeId);
+			txtDesignation.setText(rs1.getString("Designation"));
+			model.setDesignation(rs1.getString("Designation"));
+			txtDepartment.setText(rs1.getString("Office"));
+			model.setEmployeeDept(rs1.getString("Office"));
+			txtDate.setText(formatter.format(LocalDate.now()));
+			model.setApplicationDate(LocalDate.now());
+			teachingStaff = false;
+			setVisible(true);
+		} else if(rs2.next()) {
+			txtName.setText(rs2.getString("Title") + " " + rs2.getString("Name"));
+			model.setEmployeeName(rs2.getString("Title") + " " + rs2.getString("Name"));
+			txtEmployeeId.setText(employeeId);
+			txtDesignation.setText(rs2.getString("Designation"));
+			model.setDesignation(rs2.getString("Designation"));
+			txtDepartment.setText(rs2.getString("Department"));
+			model.setEmployeeDept(rs2.getString("Department"));
+			txtDate.setText(formatter.format(LocalDate.now()));
+			model.setApplicationDate(LocalDate.now());
+			teachingStaff = true;
+			setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(this,
+			        "No data found for employee ID: " + employeeId,
+			        "Data not found",
+			        JOptionPane.ERROR_MESSAGE);
+		}
+		rs1.close();
+		rs2.close();
+	      stmt1.close();
+	      stmt2.close();
+	      conn.close();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(this,
+			        "Connection to MySQL database failed",
+			        "Connection failed",
+			        JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			JOptionPane.showMessageDialog(this,
+			        "Connection to MySQL database failed",
+			        "Connection failed",
+			        JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}finally{
+		      //finally block used to close resources
+		      try{
+		         if(stmt1!=null)
+		            stmt1.close();
+		         if(stmt2!=null)
+		        	 stmt2.close();
+		      }catch(SQLException se2){
+		      }// nothing we can do
+		      try{
+		         if(conn!=null)
+		            conn.close();
+		      }catch(SQLException se){
+		         se.printStackTrace();
+		      }//end finally try
+		   }
+	}
+	
+	public LeaveRecordModel getLeaveRecord() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		LeaveRecordModel recordModel = null;
+		try {
+			Class.forName(Constants.JDBC_DRIVER);
+			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
+			String query = "SELECT * FROM LeaveRecord WHERE EID = ?;";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, employeeId);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				recordModel = new LeaveRecordModel(employeeId, rs.getString("CL"), rs.getString("PL"), rs.getString("CCL"), rs.getString("ODL"), rs.getString("OL"));
+			} 
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null)
+					conn.close();
+				if(stmt != null)
+					stmt.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return recordModel;
+	}
+	
+	private void submitApplication() {
+		LeaveRecordModel leaveRecord = getLeaveRecord();
+		if(leaveRecord == null) {
+			JOptionPane.showMessageDialog(this,
+			        "Could not fetch leave record.",
+			        "Failed",
+			        JOptionPane.ERROR_MESSAGE);
+		} else {
+			if(comboBoxLeaveType.getSelectedItem().equals("PL")) {
+				String pl = leaveRecord.getPl();
+				String[] plArr = pl.split("/");
+				int leavesTaken = Integer.parseInt(plArr[0]);
+				int totalLeaves = Integer.parseInt(plArr[1]);
+				int leavesLeft = totalLeaves - leavesTaken;
+				int leavesApplied = Integer.parseInt(numberOfLeaveDays.getText());
+				if(leavesLeft < leavesApplied) {
+					JOptionPane.showMessageDialog(this,
+					        "Maximum number of PL exceeded. Applied: " + leavesApplied + ", Available: " + leavesLeft,
+					        "Leaves not available",
+					        JOptionPane.ERROR_MESSAGE);
+							return;
+				}
+			} else if(comboBoxLeaveType.getSelectedItem().equals("CL")) {
+				String cl = leaveRecord.getCl();
+				String[] clArr = cl.split("/");
+				int leavesTaken = Integer.parseInt(clArr[0]);
+				int totalLeaves = Integer.parseInt(clArr[1]);
+				int leavesLeft = totalLeaves - leavesTaken;
+				int leavesApplied = Integer.parseInt(numberOfLeaveDays.getText());
+				if(leavesLeft < leavesApplied) {
+					JOptionPane.showMessageDialog(this,
+					        "Maximum number of CL exceeded. Applied: " + leavesApplied + ", Available: " + leavesLeft,
+					        "Leaves not available",
+					        JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			}
+			model.setTypeOfLeave((String)comboBoxLeaveType.getSelectedItem());
+			model.setUrgent(chckbxUrgent.isSelected());
+			model.setStartDate(startDate.getDate());
+			model.setEndDate(endDate.getDate());
+			model.setTotalDays(startDate.getDate().until(endDate.getDate(), ChronoUnit.DAYS) + 1);
+			String reason = txtAreaReason.getText();
+			if(reason.trim().isEmpty()) {
+				JOptionPane.showMessageDialog(this,
+				        "Please fill in the reason for which you wish to take a leave.",
+				        "Add reason for leave",
+				        JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			model.setLeaveReason(reason);
+			sendApplicationToDatabase();
+		}
+	}
+	
+	public void sendApplicationToDatabase() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			Class.forName(Constants.JDBC_DRIVER);
+			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
+			String query = "INSERT into Leave_Applications(EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			stmt = conn.prepareStatement(query);
+			stmt.setString(1, employeeId);
+			stmt.setDate(2, Date.valueOf(model.getApplicationDate()));
+			stmt.setString(3, model.getTypeOfLeave());
+			stmt.setString(4, model.getLeaveReason());
+			stmt.setDate(5, Date.valueOf(model.getStartDate()));
+			stmt.setDate(6, Date.valueOf(model.getEndDate()));
+			if(teachingStaff) {
+				stmt.setInt(7, Constants.PENDING);
+				stmt.setInt(8, Constants.NOT_APPLICABLE);
+				stmt.setInt(9, Constants.PENDING);
+				stmt.setInt(10, Constants.PENDING);
+				stmt.setInt(11, Constants.PENDING);
+			} else {
+				stmt.setInt(7, Constants.NOT_APPLICABLE);
+				stmt.setInt(8, Constants.PENDING);
+				stmt.setInt(9, Constants.NOT_APPLICABLE);
+				stmt.setInt(10, Constants.PENDING);
+				stmt.setInt(11, Constants.PENDING);
+			}
+			stmt.executeUpdate();
+			JOptionPane.showMessageDialog(this,
+			        "Your application was successfully submitted.",
+			        "Submission successful",
+			        JOptionPane.INFORMATION_MESSAGE);
+			setVisible(false);
+		} catch(SQLException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this,
+			        "Could not submit your application due to an error. Please try again.",
+			        "Submission failed",
+			        JOptionPane.ERROR_MESSAGE);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this,
+			        "Could not submit your application due to an error. Please try again.",
+			        "Submission failed",
+			        JOptionPane.ERROR_MESSAGE);
+		} finally {
+			try {
+				if(conn != null)
+					conn.close();
+				if(stmt != null)
+					stmt.close();
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
