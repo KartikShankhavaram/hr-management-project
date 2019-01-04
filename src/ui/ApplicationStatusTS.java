@@ -11,6 +11,7 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
+import controller.ApplicationStatusTSController;
 import model.LeaveApplicationModel;
 import utils.Constants;
 
@@ -53,6 +54,11 @@ public class ApplicationStatusTS extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private LeaveApplicationModel application;
+	private ApplicationStatusTSController controller;
+	
+	private JLabel lblEName;
+	private JLabel lblEDept;
+	private JLabel lblEDesignation;
 	/**
 	 * Launch the application.
 	 */
@@ -145,7 +151,7 @@ public class ApplicationStatusTS extends JFrame {
 		contentPane.add(lblReason);
 		contentPane.add(numberOfLeaveDays);
 		
-		JLabel lblEName = new JLabel("");
+		lblEName = new JLabel("");
 		lblEName.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblEName.setBounds(149, 53, 164, 14);
 		contentPane.add(lblEName);
@@ -155,12 +161,12 @@ public class ApplicationStatusTS extends JFrame {
 		lblEId.setFont(new Font("Dialog", Font.PLAIN, 12));
 		contentPane.add(lblEId);
 		
-		JLabel lblEDesignation = new JLabel("");
+		lblEDesignation = new JLabel("");
 		lblEDesignation.setBounds(149, 139, 136, 14);
 		lblEDesignation.setFont(new Font("Dialog", Font.PLAIN, 12));
 		contentPane.add(lblEDesignation);
 		
-		JLabel lblEDept = new JLabel("");
+		lblEDept = new JLabel("");
 		lblEDept.setBounds(397, 139, 86, 14);
 		lblEDept.setFont(new Font("Dialog", Font.PLAIN, 12));
 		contentPane.add(lblEDept);
@@ -236,13 +242,8 @@ public class ApplicationStatusTS extends JFrame {
 		contentPane.add(lblDirectorApproval);
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-		getEmployeeDetails();
 		
-		lblEName.setText(application.getEmployeeName());
 		lblEId.setText(application.getEmployeeId());
-		lblEDesignation.setText(application.getDesignation());
-		lblEDept.setText(application.getEmployeeDept());
 		lblEAppDate.setText(formatter.format(application.getApplicationDate()));
 		lblEName.setText(application.getEmployeeName());
 		lblEName.setText(application.getEmployeeName());
@@ -295,42 +296,21 @@ public class ApplicationStatusTS extends JFrame {
 				break;
 		}
 		
+		controller = new ApplicationStatusTSController(this, application);
 	}
 	
-	public void getEmployeeDetails() {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = "SELECT Name, Designation, Department FROM Employee e, Teaching_Staff n WHERE e.EID = n.EID AND e.EID = ?;";
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, application.getEmployeeId());
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				application.setEmployeeName(rs.getString("Name"));
-				application.setDesignation(rs.getString("Designation"));
-				application.setEmployeeDept(rs.getString("Department"));
-			} else {
-				JOptionPane.showMessageDialog(this, "No data found for employee ID: " + application.getEmployeeId(), "Data not found", JOptionPane.ERROR_MESSAGE);
-			}
-			rs.close();
-			setVisible(true);
-		} catch(SQLException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			try {
-				if(conn != null)
-					conn.close();
-				if(stmt != null)
-					stmt.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	public void showNoDataError(String employeeId) {
+		JOptionPane.showMessageDialog(this, "No data found for employee ID: " + employeeId, "Data not found", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void setData(LeaveApplicationModel model) {
+		lblEName.setText(model.getEmployeeName());
+		lblEDesignation.setText(model.getDesignation());
+		lblEDept.setText(model.getEmployeeDept());
+		setVisible(true);
+	}
+	
+	public void showConnectionError() {
+		JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
 	}
 }
