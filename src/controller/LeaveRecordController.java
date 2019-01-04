@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import model.LeaveApplicationModel;
 import model.LeaveRecordModel;
 import ui.LeavesTaken;
 import utils.Constants;

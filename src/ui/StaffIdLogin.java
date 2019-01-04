@@ -10,6 +10,8 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import controller.LeaveApplicationController;
+import controller.StaffIdLoginController;
 import model.LeaveApplicationModel;
 import utils.Constants;
 
@@ -37,7 +39,7 @@ public class StaffIdLogin extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtStaffId;
-
+	private StaffIdLoginController controller;
 	/**
 	 * Launch the application.
 	 */
@@ -84,7 +86,7 @@ public class StaffIdLogin extends JFrame {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				checkId(txtStaffId.getText());
+				controller.checkId(txtStaffId.getText());
 			}
 		});
 		btnLogin.setBounds(143, 134, 114, 25);
@@ -100,40 +102,17 @@ public class StaffIdLogin extends JFrame {
 		});
 		btnBack.setBounds(272, 134, 114, 25);
 		contentPane.add(btnBack);
+		
+		controller = new StaffIdLoginController(this);
 	}
 	
-	public void checkId(String id) {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = "SELECT * FROM Employee where EID = ?;";
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				setVisible(false);
-				StaffDashboard s = new StaffDashboard(id);
-				s.setVisible(true);
-			} else {
-				JOptionPane.showMessageDialog(this, "This staff Id is invalid. Please try again.", "Login failed", JOptionPane.ERROR_MESSAGE);
-			}
-		} catch(SQLException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			try {
-				if(conn != null)
-					conn.close();
-				if(stmt != null)
-					stmt.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	public void createNewStaffDashboard(String id) {
+		setVisible(false);
+		StaffDashboard s = new StaffDashboard(id);
+		s.setVisible(true);
+	}
+	
+	public void handleErrors(String message, String title) {
+		JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
 	}
 }
