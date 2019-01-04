@@ -6,17 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.swing.JOptionPane;
-
 import model.LeaveApplicationModel;
-import ui.ApplicationStatusNTS;
+import ui.ApplicationStatusTS;
 import utils.Constants;
 
-public class ApplicationStatusNTSController {
-	private ApplicationStatusNTS instance;
+public class ApplicationStatusTSController {
+	private ApplicationStatusTS instance;
 	private LeaveApplicationModel model;
 	
-	public ApplicationStatusNTSController(ApplicationStatusNTS instance, LeaveApplicationModel model) {
+	public ApplicationStatusTSController(ApplicationStatusTS instance, LeaveApplicationModel model) {
 		this.instance = instance;
 		this.model = model;
 		getEmployeeDetails();
@@ -28,14 +26,14 @@ public class ApplicationStatusNTSController {
 		try {
 			Class.forName(Constants.JDBC_DRIVER);
 			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = "SELECT Name, Designation, Office FROM Employee e, Non_Teaching_staff n WHERE e.EID = n.EID AND e.EID = ?;";
+			String query = "SELECT Name, Designation, Department FROM Employee e, Teaching_Staff n WHERE e.EID = n.EID AND e.EID = ?;";
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, model.getEmployeeId());
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
 				model.setEmployeeName(rs.getString("Name"));
 				model.setDesignation(rs.getString("Designation"));
-				model.setEmployeeDept(rs.getString("Office"));
+				model.setEmployeeDept(rs.getString("Department"));
 				instance.setData(model);
 			} else {
 				instance.showNoDataError(model.getEmployeeId());
