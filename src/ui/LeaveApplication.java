@@ -1,5 +1,6 @@
 package ui;
 import java.awt.EventQueue;
+
 import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
@@ -11,6 +12,7 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
+import controller.LeaveApplicationController;
 import model.LeaveApplicationModel;
 import model.LeaveRecordModel;
 import utils.Constants;
@@ -67,8 +69,7 @@ public class LeaveApplication extends JFrame {
 	private DatePicker endDate;
 	private JCheckBox chckbxUrgent;
 	private String employeeId;
-	private LeaveApplicationModel model;
-	private boolean teachingStaff;
+	private LeaveApplicationController controller;
 	/**
 	 * Launch the application.
 	 */
@@ -98,7 +99,6 @@ public class LeaveApplication extends JFrame {
 		setTitle("Leave Application Form");
 
 		this.employeeId = employeeId;
-		model = new LeaveApplicationModel(employeeId);
 		
 		JLabel lblNewLabel = new JLabel("Leave Application Form");
 		lblNewLabel.setBounds(181, 11, 303, 19);
@@ -184,8 +184,6 @@ public class LeaveApplication extends JFrame {
 		numberOfLeaveDays = new JLabel("1");
 		numberOfLeaveDays.setFont(new Font("Dialog", Font.PLAIN, 12));
 		numberOfLeaveDays.setBounds(149, 339, 46, 14);
-		
-		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		
 		URL dateImageURL = LeaveApplication.class.getResource("/resources/datepickerbutton1.png");
         Image dateExampleImage = Toolkit.getDefaultToolkit().getImage(dateImageURL);
@@ -318,88 +316,32 @@ public class LeaveApplication extends JFrame {
 		btnBack.setBounds(362, 466, 114, 25);
 		contentPane.add(btnBack);
 		
-		fetchEmployeeDetails();
+		controller = new LeaveApplicationController(employeeId, this);
 	}
 	
-	private void fetchEmployeeDetails() {
-		Connection conn = null;
-		PreparedStatement stmt1 = null;
-		PreparedStatement stmt2 = null;
-		try {
-		Class.forName(Constants.JDBC_DRIVER);
-		conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-		String query1 = "SELECT Title, Name, Designation, Office FROM Employee e, Non_Teaching_staff n WHERE e.EID = n.EID AND e.EID = ?;";
-		String query2 = "SELECT Title, Name, Designation, Department FROM Employee e, Teaching_Staff t WHERE e.EID = t.EID AND e.EID = ?;";
-		stmt1 = conn.prepareStatement(query1);
-		stmt1.setString(1, employeeId);
-		stmt2 = conn.prepareStatement(query2);
-		stmt2.setString(1, employeeId);
-		ResultSet rs1 = stmt1.executeQuery();
-		ResultSet rs2 = stmt2.executeQuery();
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		if(rs1.next()) {
-			txtName.setText(rs1.getString("Name"));
-			model.setEmployeeName(rs1.getString("Name"));
-			txtEmployeeId.setText(employeeId);
-			txtDesignation.setText(rs1.getString("Designation"));
-			model.setDesignation(rs1.getString("Designation"));
-			txtDepartment.setText(rs1.getString("Office"));
-			model.setEmployeeDept(rs1.getString("Office"));
-			txtDate.setText(formatter.format(LocalDate.now()));
-			model.setApplicationDate(LocalDate.now());
-			teachingStaff = false;
-			setVisible(true);
-		} else if(rs2.next()) {
-			txtName.setText(rs2.getString("Name"));
-			model.setEmployeeName(rs2.getString("Name"));
-			txtEmployeeId.setText(employeeId);
-			txtDesignation.setText(rs2.getString("Designation"));
-			model.setDesignation(rs2.getString("Designation"));
-			txtDepartment.setText(rs2.getString("Department"));
-			model.setEmployeeDept(rs2.getString("Department"));
-			txtDate.setText(formatter.format(LocalDate.now()));
-			model.setApplicationDate(LocalDate.now());
-			teachingStaff = true;
-			setVisible(true);
-		} else {
+	public void setEmployeeData(LeaveApplicationModel model) {
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		if( model == null) {
 			JOptionPane.showMessageDialog(this,
 			        "No data found for employee ID: " + employeeId,
 			        "Data not found",
 			        JOptionPane.ERROR_MESSAGE);
+			return;
 		}
-		rs1.close();
-		rs2.close();
-	      stmt1.close();
-	      stmt2.close();
-	      conn.close();
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(this,
-			        "Connection to MySQL database failed",
-			        "Connection failed",
-			        JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(this,
-			        "Connection to MySQL database failed",
-			        "Connection failed",
-			        JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}finally{
-		      //finally block used to close resources
-		      try{
-		         if(stmt1!=null)
-		            stmt1.close();
-		         if(stmt2!=null)
-		        	 stmt2.close();
-		      }catch(SQLException se2){
-		      }// nothing we can do
-		      try{
-		         if(conn!=null)
-		            conn.close();
-		      }catch(SQLException se){
-		         se.printStackTrace();
-		      }//end finally try
-		   }
+		
+		txtName.setText(model.getEmployeeName());
+		txtEmployeeId.setText(model.getEmployeeId());
+		txtDesignation.setText(model.getDesignation());
+		txtDepartment.setText(model.getEmployeeDept());
+		txtDate.setText(formatter.format(model.getApplicationDate()));
+		setVisible(true);
+	}
+	
+	public void showMysqlError() {
+		JOptionPane.showMessageDialog(this,
+		        "Connection to MySQL database failed",
+		        "Connection failed",
+		        JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public LeaveRecordModel getLeaveRecord() {
@@ -435,6 +377,7 @@ public class LeaveApplication extends JFrame {
 	
 	private void submitApplication() {
 		LeaveRecordModel leaveRecord = getLeaveRecord();
+		LeaveApplicationModel model = controller.getModel();
 		if(leaveRecord == null) {
 			JOptionPane.showMessageDialog(this,
 			        "Could not fetch leave record.",
@@ -484,63 +427,18 @@ public class LeaveApplication extends JFrame {
 				return;
 			}
 			model.setLeaveReason(reason);
-			sendApplicationToDatabase();
-		}
-	}
-	
-	public void sendApplicationToDatabase() {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = "INSERT into Leave_Applications(EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, employeeId);
-			stmt.setDate(2, Date.valueOf(model.getApplicationDate()));
-			stmt.setString(3, model.getTypeOfLeave());
-			stmt.setString(4, model.getLeaveReason());
-			stmt.setDate(5, Date.valueOf(model.getStartDate()));
-			stmt.setDate(6, Date.valueOf(model.getEndDate()));
-			if(teachingStaff) {
-				stmt.setInt(7, Constants.PENDING);
-				stmt.setInt(8, Constants.NOT_APPLICABLE);
-				stmt.setInt(9, Constants.PENDING);
-				stmt.setInt(10, Constants.PENDING);
-				stmt.setInt(11, Constants.PENDING);
-			} else {
-				stmt.setInt(7, Constants.NOT_APPLICABLE);
-				stmt.setInt(8, Constants.PENDING);
-				stmt.setInt(9, Constants.NOT_APPLICABLE);
-				stmt.setInt(10, Constants.PENDING);
-				stmt.setInt(11, Constants.PENDING);
-			}
-			stmt.executeUpdate();
-			JOptionPane.showMessageDialog(this,
-			        "Your application was successfully submitted.",
-			        "Submission successful",
-			        JOptionPane.INFORMATION_MESSAGE);
-			setVisible(false);
-		} catch(SQLException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this,
-			        "Could not submit your application due to an error. Please try again.",
-			        "Submission failed",
-			        JOptionPane.ERROR_MESSAGE);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this,
-			        "Could not submit your application due to an error. Please try again.",
-			        "Submission failed",
-			        JOptionPane.ERROR_MESSAGE);
-		} finally {
-			try {
-				if(conn != null)
-					conn.close();
-				if(stmt != null)
-					stmt.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
+			int result = controller.sendApplicationToDatabase(employeeId, model);
+			if( result == 0 ) {
+				JOptionPane.showMessageDialog(this,
+		        "Your application was successfully submitted.",
+		        "Submission successful",
+		        JOptionPane.INFORMATION_MESSAGE);
+				setVisible(false);
+			} else if ( result == -1 ) {
+				JOptionPane.showMessageDialog(this,
+		        "Could not submit your application due to an error. Please try again.",
+		        "Submission failed",
+		        JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

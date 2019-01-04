@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
+import controller.LeaveApplicationDecisionController;
 import model.LeaveApplicationModel;
 import model.LeaveRecordModel;
 import utils.Constants;
@@ -35,6 +36,7 @@ public class LeaveApplicationDecision extends JFrame {
 	private JPanel contentPane;
 	private int userType;
 	private ArrayList<LeaveApplicationModel> applications;
+	private LeaveApplicationDecisionController controller;
 
 	/**
 	 * Launch the application.
@@ -68,9 +70,11 @@ public class LeaveApplicationDecision extends JFrame {
 		contentPane.setLayout(null);
 		
 		setTitle("Pending Leave Application List");
+				
+		controller = new LeaveApplicationDecisionController(userType, this);
 		
 		recreate();
-
+//		setApplications(controller.getApplicationsData());
 	}
 	
 	private void addListItem(int index, LeaveApplicationModel application, boolean noApplications) {
@@ -190,7 +194,11 @@ public class LeaveApplicationDecision extends JFrame {
 		}
 	}
 	
-	private void getApplications() {
+	public void setApplications() {
+		recreate();
+	}
+	
+/*	private void getApplications() {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
@@ -259,9 +267,13 @@ public class LeaveApplicationDecision extends JFrame {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 	
 	public void recreate() {
+		
+		controller.getApplications();
+		ArrayList<LeaveApplicationModel> applications = controller.getApplicationsData();
+		
 		JLabel lblNewLabel = new JLabel("Leave Applications");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 17));
 		lblNewLabel.setBounds(306, 30, 200, 15);
@@ -299,12 +311,10 @@ public class LeaveApplicationDecision extends JFrame {
 				break;
 		}
 		contentPane.add(lblLoggedIn);
-
-		getApplications();
 		
 		addListItem(-1, null, false);
 		
-		if(applications.size() == 0 ) {
+		if(applications == null || applications.size() == 0 ) {
 			addListItem(0, null, true);
 		} else {
 			for(int i = 0; i < applications.size(); i++) {
@@ -313,5 +323,12 @@ public class LeaveApplicationDecision extends JFrame {
 		}	
 		validate();
 		repaint();
+		
+		setVisible(true);
+	}
+	
+	public void showConnectionError() {
+		JOptionPane.showMessageDialog(this, "Failed to fetch leave applications.", "Operation failed", JOptionPane.ERROR_MESSAGE);
+		setVisible(false);
 	}
 }

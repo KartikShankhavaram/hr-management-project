@@ -676,7 +676,7 @@ public class Appraisal extends JFrame {
 		panel.add(btnAddPaper);
 	}
 	
-	public void setAppraisalData(boolean dataPresent, String name, String dept, String designation ) {
+	public void setAppraisalData(boolean dataPresent, String name, String dept, String designation) {
 		if(dataPresent) {
 			txtEmployeeName.setText(name);
 			txtEmployeeDept.setText(dept);

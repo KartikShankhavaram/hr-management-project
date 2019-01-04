@@ -11,6 +11,7 @@ import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
+import controller.LeaveApplicationNTSReviewController;
 import model.LeaveApplicationModel;
 import utils.Constants;
 
@@ -53,9 +54,12 @@ public class LeaveApplicationNTSReview extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JLabel lblEDept;
 	LeaveApplicationModel application;
-	LeaveApplicationDecision instance;
+	LeaveApplicationDecision applicationDecisionList;
 	int userType;
+	
+	private LeaveApplicationNTSReviewController controller;
 
 	/**
 	 * Launch the application.
@@ -76,11 +80,11 @@ public class LeaveApplicationNTSReview extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LeaveApplicationNTSReview(LeaveApplicationModel application, int userType, LeaveApplicationDecision instance) {
+	public LeaveApplicationNTSReview(LeaveApplicationModel application, int userType, LeaveApplicationDecision applicationDecisionList) {
 		
 		this.application = application;
 		this.userType = userType;
-		this.instance = instance;
+		this.applicationDecisionList = applicationDecisionList;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 680);
@@ -162,7 +166,7 @@ public class LeaveApplicationNTSReview extends JFrame {
 		lblEDesignation.setBounds(149, 139, 181, 14);
 		contentPane.add(lblEDesignation);
 		
-		JLabel lblEDept = new JLabel("");
+		lblEDept = new JLabel("");
 		lblEDept.setBounds(449, 139, 160, 14);
 		contentPane.add(lblEDept);
 		
@@ -224,7 +228,7 @@ public class LeaveApplicationNTSReview extends JFrame {
 		JButton btnApprove = new JButton("Approve");
 		btnApprove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				approveApplication();
+				controller.approveApplication();
 			}
 		});
 		btnApprove.setBounds(75, 528, 111, 23);
@@ -233,7 +237,7 @@ public class LeaveApplicationNTSReview extends JFrame {
 		JButton btnReject = new JButton("Reject");
 		btnReject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				rejectApplication();
+				controller.rejectApplication();
 			}
 		});
 		btnReject.setBounds(208, 528, 89, 23);
@@ -241,12 +245,9 @@ public class LeaveApplicationNTSReview extends JFrame {
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-		getDepartment();
 		lblEName.setText(application.getEmployeeName());
 		lblEId.setText(application.getEmployeeId());
 		lblEDesignation.setText(application.getDesignation());
-		System.out.println("HA " + application.getDesignation());
-		lblEDept.setText(application.getEmployeeDept());
 		lblEAppDate.setText(formatter.format(application.getApplicationDate()));
 		lblEName.setText(application.getEmployeeName());
 		lblEName.setText(application.getEmployeeName());
@@ -260,7 +261,7 @@ public class LeaveApplicationNTSReview extends JFrame {
 		JButton btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				instance.recreate();
+				applicationDecisionList.recreate();
 				setVisible(false);
 			}
 		});
@@ -288,168 +289,34 @@ public class LeaveApplicationNTSReview extends JFrame {
 				lblDirectorApproval.setText("Rejected");
 				break;
 		}
+		
+		controller = new LeaveApplicationNTSReviewController(application, this, userType);
 	}
 	
-	private void getDepartment() {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = "SELECT Office FROM Non_Teaching_staff WHERE EID = ?;";
-			stmt = conn.prepareStatement(query);
-			stmt.setString(1, application.getEmployeeId());
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next()) {
-				application.setEmployeeDept(rs.getString("Office"));
-			}
-			rs.close();
-			setVisible(true);
-		} catch(SQLException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-			instance.recreate();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-			instance.recreate();
-		} finally {
-			try {
-				if(conn != null)
-					conn.close();
-				if(stmt != null)
-					stmt.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
+	public void setDepartment(String department) {
+		lblEDept.setText(department);
+		setVisible(true);
 	}
 	
-	private void approveApplication() {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = null;
-			conn.setAutoCommit(false);
-//			if(userType == Constants.HOD_CSE || userType == Constants.HOD_ECE || userType == Constants.HOD_ME) {
-			if(userType == Constants.REGISTRAR) {
-				query = "Update Leave_Applications set Registrar_Status = ? WHERE AID = ?;";
-				stmt = conn.prepareStatement(query);
-				stmt.setInt(1, Constants.APPROVED);
-				stmt.setInt(2, application.getApplicationId());
-				stmt.executeUpdate();
-				conn.commit();
-			} else if(userType == Constants.DIRECTOR) {
-				query = "Update Leave_Applications set Director_Status = ?, Application_Status = ? WHERE AID = ?;";
-				stmt = conn.prepareStatement(query);
-				stmt.setInt(1, Constants.APPROVED);
-				stmt.setInt(2, Constants.APPROVED);
-				stmt.setInt(3, application.getApplicationId());
-				stmt.executeUpdate();
-				query = "Select * from LeaveRecord WHERE EID = ?;";
-				stmt = conn.prepareStatement(query);
-				stmt.setString(1, application.getEmployeeId());
-				ResultSet rs = stmt.executeQuery();
-				String typeOfLeave = application.getTypeOfLeave();
-				rs.next();
-				String leaves = rs.getString(typeOfLeave);
-				String newCount = null;
-				rs.close();
-				if(typeOfLeave.equals("PL") || typeOfLeave.equals("CL")) {
-					int currentCount = Integer.parseInt(leaves.split("/")[0]);
-					newCount = (currentCount + application.getTotalDays()) + "/" + leaves.split("/")[1];
-					if(typeOfLeave.equals("PL")) {
-						query = "UPDATE LeaveRecord SET PL = ? WHERE EID = ?;";
-						stmt = conn.prepareStatement(query);
-						stmt.setString(1, newCount);
-						stmt.setString(2, application.getEmployeeId());
-					} else {
-						query = "UPDATE LeaveRecord SET CL = ? WHERE EID = ?;";
-						stmt = conn.prepareStatement(query);
-						stmt.setString(1, newCount);
-						stmt.setString(2, application.getEmployeeId());
-					}
-				} else {
-					int currentCount = Integer.parseInt(leaves);
-					newCount = (currentCount + application.getTotalDays()) + "";
-					query = "UPDATE LeaveRecord SET " + typeOfLeave + " = ? WHERE EID = ?;";
-					stmt = conn.prepareStatement(query);
-					stmt.setString(1, newCount);
-					stmt.setString(2, application.getEmployeeId());
-				}
-				stmt.executeUpdate();
-				conn.commit();
-			}
+	public void showConnectionError() {
+		JOptionPane.showMessageDialog(this, "Failed to fetch data.", "Operation failed", JOptionPane.ERROR_MESSAGE);
+		applicationDecisionList.recreate();
+	}
+	
+	public void showSuccess(int action) {
+		if(action == 1) {
 			JOptionPane.showMessageDialog(this, "Application successfully approved.", "Process successful", JOptionPane.INFORMATION_MESSAGE);
-			setVisible(false);
-			instance.recreate();
-		} catch(SQLException e) {
-			e.printStackTrace();
-			try {
-				if(conn != null) {
-					conn.rollback();
-				}
-			} catch(SQLException e1) {
-				
-			}
-			JOptionPane.showMessageDialog(this, "Could not approve application.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Could not approve application.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			try {
-				if(conn != null)
-					conn.close();
-				if(stmt != null)
-					stmt.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}
+		} else {
+			JOptionPane.showMessageDialog(this, "Application successfully rejected.", "Process successful", JOptionPane.INFORMATION_MESSAGE);
 		}
+		setVisible(false);
+		applicationDecisionList.recreate();
 	}
 	
-	private void rejectApplication() {
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		try {
-			Class.forName(Constants.JDBC_DRIVER);
-			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = null;
-//			if(userType == Constants.HOD_CSE || userType == Constants.HOD_ECE || userType == Constants.HOD_ME) {
-			if(userType == Constants.REGISTRAR) {
-				query = "Update Leave_Applications set Registrar_Status = ? WHERE AID = ?;";
-				stmt = conn.prepareStatement(query);
-				stmt.setInt(1, Constants.REJECTED);
-				stmt.setInt(2, application.getApplicationId());
-				stmt.executeUpdate();
-			} else if(userType == Constants.DIRECTOR) {
-				query = "Update Leave_Applications set Director_Status = ?, Application_Status = ? WHERE AID = ?;";
-				stmt = conn.prepareStatement(query);
-				stmt.setInt(1, Constants.REJECTED);
-				stmt.setInt(2, Constants.REJECTED);
-				stmt.setInt(3, application.getApplicationId());
-				stmt.executeUpdate();
-			}
-			JOptionPane.showMessageDialog(this, "Application successfully rejected.", "Process successful", JOptionPane.INFORMATION_MESSAGE);
-			setVisible(false);
-			instance.recreate();
-		} catch(SQLException e) {
-			e.printStackTrace();
+	public void showFailure(int action) {
+		if(action == 1)
+			JOptionPane.showMessageDialog(this, "Could not approve application.", "Operation failed", JOptionPane.ERROR_MESSAGE);
+		else
 			JOptionPane.showMessageDialog(this, "Could not reject application.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, "Could not reject application.", "Operation failed", JOptionPane.ERROR_MESSAGE);
-		} finally {
-			try {
-				if(conn != null)
-					conn.close();
-				if(stmt != null)
-					stmt.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }
