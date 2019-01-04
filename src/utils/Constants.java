@@ -14,7 +14,7 @@ public class Constants {
 	
 	public static final int HOD_CSE = 0;
 	public static final int HOD_ECE = 1;
-	public static final int HOD_MME = 2;
+	public static final int HOD_ME = 2;
 	public static final int REGISTRAR = 3;
 	public static final int DOFA = 4;
 	public static final int DIRECTOR = 5;

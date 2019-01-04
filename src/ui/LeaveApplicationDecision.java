@@ -67,22 +67,10 @@ public class LeaveApplicationDecision extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		setTitle("Pending Leave Application List");
+		
 		recreate();
-//		String columns[] = {"No.", "Application date", "Employee", "Urgent", "From", "To"};
-//		String data[][] = {};
-//		
-//		JTable applicationStatusTable = new JTable(data, columns);
-//		applicationStatusTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		applicationStatusTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-//		applicationStatusTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-//		applicationStatusTable.getColumnModel().getColumn(2).setPreferredWidth(75);
-//		applicationStatusTable.getColumnModel().getColumn(3).setPreferredWidth(50);
-//		applicationStatusTable.getColumnModel().getColumn(4).setPreferredWidth(80);
-//		applicationStatusTable.getColumnModel().getColumn(5).setPreferredWidth(80);
-//		contentPane.setLayout(null);
-//		JScrollPane sp = new JScrollPane(applicationStatusTable);
-//		sp.setBounds(5, 5, 419, 261);
-//		contentPane.add(sp);
+
 	}
 	
 	private void addListItem(int index, LeaveApplicationModel application, boolean noApplications) {
@@ -182,10 +170,10 @@ public class LeaveApplicationDecision extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
 					if(application.getHodStatus() == Constants.NOT_APPLICABLE) {
-						LeaveApplicationNTS ntsReview = new LeaveApplicationNTS(application, userType, LeaveApplicationDecision.this);
+						LeaveApplicationNTSReview ntsReview = new LeaveApplicationNTSReview(application, userType, LeaveApplicationDecision.this);
 						contentPane.removeAll();
 					} else if(application.getRegistrarStatus() == Constants.NOT_APPLICABLE){
-						LeaveApplicationReview tsReview = new LeaveApplicationReview(application, userType, LeaveApplicationDecision.this);
+						LeaveApplicationTSReview tsReview = new LeaveApplicationTSReview(application, userType, LeaveApplicationDecision.this);
 						contentPane.removeAll();
 					}
 				}
@@ -211,22 +199,22 @@ public class LeaveApplicationDecision extends JFrame {
 			String query = null;
 			switch(userType) {
 				case Constants.HOD_CSE:
-					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND t.Department = 'CSE' AND HOD_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;";
+					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent, Designation FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND t.Department = 'CSE' AND HOD_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;";
 					break;
 				case Constants.HOD_ECE:
-					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND t.Department = 'ECE' AND HOD_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;";
+					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent, Designation FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND t.Department = 'ECE' AND HOD_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;";
 					break;
-				case Constants.HOD_MME:
-					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND t.Department = 'MME' AND HOD_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;";
+				case Constants.HOD_ME:
+					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent, Designation FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND t.Department = 'ME' AND HOD_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;";
 					break;
 				case Constants.REGISTRAR:
-					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent FROM Leave_Applications l, Employee e, Non_Teaching_staff n WHERE l.EID = e.EID AND e.EID = n.EID AND Registrar_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;"; 
+					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent, Designation FROM Leave_Applications l, Employee e, Non_Teaching_staff n WHERE l.EID = e.EID AND e.EID = n.EID AND Registrar_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;"; 
 					break;
 				case Constants.DOFA:
-					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND DOFA_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;"; 
+					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent, Designation FROM Leave_Applications l, Employee e, Teaching_Staff t WHERE l.EID = e.EID AND e.EID = t.EID AND DOFA_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;"; 
 					break;
 				case Constants.DIRECTOR: 
-					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent FROM Leave_Applications l, Employee e WHERE l.EID = e.EID AND Director_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;"; 
+					query = "SELECT AID, l.EID as EID, Application_Date, Type_Of_Leave, Reason_For_Leave, Start_Date, End_Date, HOD_Status, Registrar_Status, DOFA_Status, Director_Status, Application_Status, Name, Urgent, Designation FROM Leave_Applications l, Employee e WHERE l.EID = e.EID AND Director_Status = 2 ORDER BY Urgent DESC, Application_Date DESC;"; 
 					break;
 				default:
 					return;
@@ -250,6 +238,7 @@ public class LeaveApplicationDecision extends JFrame {
 				model.setApplicationStatus(rs.getInt("Application_Status"));
 				model.setEmployeeName(rs.getString("Name"));
 				model.setUrgent(rs.getInt("Urgent") == 1);
+				model.setDesignation(rs.getString("Designation"));
 				applications.add(model);
 			}
 			setVisible(true);
@@ -277,6 +266,39 @@ public class LeaveApplicationDecision extends JFrame {
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 17));
 		lblNewLabel.setBounds(306, 30, 200, 15);
 		contentPane.add(lblNewLabel);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+			}
+		});
+		btnBack.setBounds(31, 26, 114, 25);
+		contentPane.add(btnBack);
+		
+		JLabel lblLoggedIn = new JLabel("");
+		lblLoggedIn.setBounds(647, 0, 136, 15);
+		switch(userType) {
+			case Constants.DIRECTOR: 
+				lblLoggedIn.setText("Hello Director");
+				break;
+			case Constants.HOD_CSE: 
+				lblLoggedIn.setText("Hello CSE HOD");
+				break;
+			case Constants.HOD_ECE: 
+				lblLoggedIn.setText("Hello ECE HOD");
+				break;
+			case Constants.HOD_ME: 
+				lblLoggedIn.setText("Hello ME HOD");
+				break;
+			case Constants.REGISTRAR: 
+				lblLoggedIn.setText("Hello Registrar");
+				break;
+			case Constants.DOFA: 
+				lblLoggedIn.setText("Hello DOFA");
+				break;
+		}
+		contentPane.add(lblLoggedIn);
 
 		getApplications();
 		

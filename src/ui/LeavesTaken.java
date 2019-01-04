@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,6 +16,8 @@ import model.LeaveRecordModel;
 
 import javax.swing.JTable;
 import java.awt.FlowLayout;
+import java.awt.Font;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -49,6 +52,7 @@ public class LeavesTaken extends JFrame {
 	 */
 	public LeavesTaken(String employeeId) {
 		this.employeeId = employeeId;
+		System.out.print("Hello " + employeeId);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 434, 342);
@@ -57,9 +61,16 @@ public class LeavesTaken extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		setTitle("Leave Record");
+		
 		sp = new JScrollPane();
 		sp.setBounds(10, 52, 414, 209);
 		contentPane.add(sp);
+		
+		JLabel lblNewLabel = new JLabel("Leave Record");
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblNewLabel.setBounds(160, 12, 264, 15);
+		contentPane.add(lblNewLabel);
 		
 		btnBack = new JButton("Back");
 		btnBack.addActionListener(new ActionListener() {
@@ -77,15 +88,15 @@ public class LeavesTaken extends JFrame {
 		if(dataPresent) {
 			contentPane.remove(sp);
 			String[][] data = new String[5][2];
-			data[0][0] = "PL";
+			data[0][0] = "PL taken";
 			data[0][1] = record.getPl();
-			data[1][0] = "CL";
+			data[1][0] = "CL taken";
 			data[1][1] = record.getCl();
-			data[2][0] = "CCL";
+			data[2][0] = "CCL taken";
 			data[2][1] = record.getCcl();
-			data[3][0] = "ODL";
+			data[3][0] = "ODL taken";
 			data[3][1] = record.getOdl();
-			data[4][0] = "OL";
+			data[4][0] = "OL taken";
 			data[4][1] = record.getOl();
 			String columns[] = {"Type of leave", "Number of leaves taken"};
 			leaveRecordTable = new JTable(data, columns);

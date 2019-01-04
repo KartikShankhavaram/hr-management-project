@@ -73,6 +73,8 @@ public class Appraisal extends JFrame {
 	private DatePicker conferenceStartDate;
 	private DatePicker conferenceEndDate;
 	private JTextArea txtAreaDesc;
+	private JTextArea txtAreaFM;
+	private JTextArea txtAreaHOD;
 	private JComboBox comboBoxFirstAuthor;
 	private JTextArea txtAreaJournals;
 	private boolean editingMode = false;
@@ -104,6 +106,8 @@ public class Appraisal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		setTitle("Appraisal Form");
 		
 		panel = new JPanel();
 		panel.setBounds(471, 127, 438, 423);
@@ -157,8 +161,12 @@ public class Appraisal extends JFrame {
 		lblHOD = new JLabel("HOD");
 		lblHOD.setBounds(32, 277, 121, 14);
 		contentPane.add(lblHOD);
-		JScrollPane spHOD = new JScrollPane();
-		spHOD.setBounds(161, 274, 278, 50);
+		
+		txtAreaHOD = new JTextArea();
+        txtAreaHOD.setBounds(161, 277, 275, 47);
+        txtAreaHOD.setLineWrap(true);
+        JScrollPane spHOD = new JScrollPane(txtAreaHOD);
+		spHOD.setBounds(161, 277, 275, 47);
 		contentPane.add(spHOD);
 		
 		JLabel lblWhatToAdd = new JLabel("What to add?");
@@ -168,7 +176,7 @@ public class Appraisal extends JFrame {
 		
 		JRadioButton rdbtnPaper = new JRadioButton("Research Paper");
 		buttonGroup.add(rdbtnPaper);
-		rdbtnPaper.setBounds(627, 74, 121, 23);
+		rdbtnPaper.setBounds(590, 74, 177, 23);
 		contentPane.add(rdbtnPaper);
 		
 		URL dateImageURL = LeaveApplication.class.getResource("/resources/datepickerbutton1.png");
@@ -190,14 +198,19 @@ public class Appraisal extends JFrame {
 		
 		JRadioButton rdbtnConference = new JRadioButton("Conference");
 		buttonGroup.add(rdbtnConference);
-		rdbtnConference.setBounds(808, 74, 101, 23);
+		rdbtnConference.setBounds(771, 74, 138, 23);
 		contentPane.add(rdbtnConference);
 		
 		JLabel lblFacultyMentor = new JLabel("Faculty Mentor");
 		lblFacultyMentor.setBounds(32, 347, 121, 15);
 		contentPane.add(lblFacultyMentor);
-		JScrollPane spFM = new JScrollPane();
-		spFM.setBounds(161, 347, 278, 44);
+		
+		txtAreaFM = new JTextArea();
+        txtAreaFM.setBounds(161, 347, 275, 58);
+        contentPane.add(txtAreaFM);
+        txtAreaFM.setLineWrap(true);
+		JScrollPane spFM = new JScrollPane(txtAreaFM);
+		spFM.setBounds(161, 347, 275, 58);
 		contentPane.add(spFM);
 		
 		JButton btnSubmitAppraisalForm = new JButton("Submit Appraisal Form");
@@ -208,7 +221,7 @@ public class Appraisal extends JFrame {
 				controller.submitAppraisalForm();
 			}
 		});
-		btnSubmitAppraisalForm.setBounds(151, 504, 210, 25);
+		btnSubmitAppraisalForm.setBounds(80, 499, 210, 25);
 		contentPane.add(btnSubmitAppraisalForm);
 		
 		rdbtnConference.addActionListener(new ActionListener() {
@@ -228,20 +241,20 @@ public class Appraisal extends JFrame {
 		showPaperTable();
         rdbtnPaper.setSelected(true);
         
-        JTextArea txtAreaFM = new JTextArea();
-        txtAreaFM.setBounds(161, 347, 275, 41);
-        contentPane.add(txtAreaFM);
-        txtAreaFM.setLineWrap(true);
+        JButton btnNewButto = new JButton("Back");
+        btnNewButto.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		setVisible(false);
+        	}
+        });
+        btnNewButto.setBounds(333, 499, 114, 25);
+        contentPane.add(btnNewButto);
         
-        JTextArea txtAreaHOD = new JTextArea();
-        txtAreaHOD.setBounds(161, 277, 275, 47);
-        contentPane.add(txtAreaHOD);
-        txtAreaHOD.setLineWrap(true);
 	}
 	
 	private void showConferenceForm() {
 		JLabel lblConferenceTopic = new JLabel("Conference Topic");
-		lblConferenceTopic.setBounds(10, 0, 105, 20);
+		lblConferenceTopic.setBounds(10, 0, 139, 20);
 		panel.add(lblConferenceTopic);
 		
 		txtConfTitle = new JTextField();
@@ -250,13 +263,13 @@ public class Appraisal extends JFrame {
 		txtConfTitle.setColumns(10);
 		
 		JLabel lblAttendedconducted = new JLabel("Attended/Conducted");
-		lblAttendedconducted.setBounds(18, 212, 131, 14);
+		lblAttendedconducted.setBounds(18, 212, 160, 14);
 		panel.add(lblAttendedconducted);
 		
 		String[] confChoice = new String[] {"Attended", "Conducted"};
 		
 		comboBoxAC = new JComboBox(confChoice);
-		comboBoxAC.setBounds(159, 209, 97, 20);
+		comboBoxAC.setBounds(198, 209, 97, 20);
 		panel.add(comboBoxAC);
 		
 		JLabel lblDescription = new JLabel("Description");
@@ -275,7 +288,7 @@ public class Appraisal extends JFrame {
 		panel.add(lblWasSpeaker);
 		
 		comboBoxSpeaker = new JComboBox(new String[] {"Yes", "No"});
-		comboBoxSpeaker.setBounds(159, 178, 77, 20);
+		comboBoxSpeaker.setBounds(198, 178, 77, 20);
 		panel.add(comboBoxSpeaker);
 		
 		JLabel lblDateOfConference = new JLabel("Date of conference");
@@ -470,7 +483,7 @@ public class Appraisal extends JFrame {
 			}
 		});
 		
-		btnAddConferenceEntry.setBounds(152, 339, 160, 23);
+		btnAddConferenceEntry.setBounds(129, 339, 183, 23);
 		panel.add(btnAddConferenceEntry);
 	}
 	
@@ -659,7 +672,7 @@ public class Appraisal extends JFrame {
 				repaint();
 			}
 		});
-		btnAddPaper.setBounds(152, 339, 160, 23);
+		btnAddPaper.setBounds(133, 339, 179, 23);
 		panel.add(btnAddPaper);
 	}
 	

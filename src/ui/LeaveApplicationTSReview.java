@@ -36,7 +36,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Properties;
 import java.awt.event.ActionEvent;
@@ -46,16 +45,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
-public class LeaveApplicationNTS extends JFrame {
-
+public class LeaveApplicationTSReview extends JFrame {
+	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	LeaveApplicationModel application;
-	LeaveApplicationDecision instance;
-	int userType;
+	private LeaveApplicationModel application;
+	private LeaveApplicationDecision instance;
+	private int userType;
 
 	/**
 	 * Launch the application.
@@ -64,8 +63,8 @@ public class LeaveApplicationNTS extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					//LeaveApplicationNTS frame = new LeaveApplicationNTS();
-					//frame.setVisible(true);
+//					LeaveApplicationReview frame = new LeaveApplicationReview();
+//					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -76,39 +75,41 @@ public class LeaveApplicationNTS extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LeaveApplicationNTS(LeaveApplicationModel application, int userType, LeaveApplicationDecision instance) {
+	public LeaveApplicationTSReview(LeaveApplicationModel application, int userType, LeaveApplicationDecision instance) {
 		
 		this.application = application;
 		this.userType = userType;
 		this.instance = instance;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 650, 680);
+		setBounds(100, 100, 507, 661);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		JLabel lblNewLabel = new JLabel("Leave Application Review NTS");
-		lblNewLabel.setBounds(149, 11, 303, 19);
+		setTitle("Leave Application Review");
+		
+		JLabel lblNewLabel = new JLabel("Leave Application Review");
+		lblNewLabel.setBounds(149, 22, 303, 19);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JLabel lblEmployeeName = new JLabel("Employee Name");
 		lblEmployeeName.setBounds(26, 53, 113, 14);
 		
 		JLabel lblDepartment = new JLabel("Department");
-		lblDepartment.setBounds(300, 139, 85, 14);
+		lblDepartment.setBounds(312, 139, 85, 14);
 		
-		JLabel lblEmployeeId = new JLabel("Employee ID");
+		JLabel lblEmployeeId = new JLabel("Employee No");
 		lblEmployeeId.setBounds(26, 97, 113, 14);
 		
 		JLabel lblDate = new JLabel("Date");
-		lblDate.setBounds(300, 97, 85, 14);
+		lblDate.setBounds(312, 97, 85, 14);
 		
 		JLabel lblDesignation = new JLabel("Designation");
 		lblDesignation.setBounds(26, 139, 113, 14);
 		
 		JLabel lblLeaveDetails = new JLabel("Leave Details");
-		lblLeaveDetails.setBounds(208, 197, 113, 14);
+		lblLeaveDetails.setBounds(208, 182, 113, 14);
 		lblLeaveDetails.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
 		JLabel lblNewLabel_1 = new JLabel("Type of Leave");
@@ -133,6 +134,30 @@ public class LeaveApplicationNTS extends JFrame {
 		JLabel numberOfLeaveDays = new JLabel("");
 		numberOfLeaveDays.setBounds(149, 339, 46, 14);
 		
+		JLabel lblLoggedIn = new JLabel("");
+		lblLoggedIn.setBounds(372, 0, 136, 15);
+		switch(userType) {
+			case Constants.DIRECTOR: 
+				lblLoggedIn.setText("Hello Director");
+				break;
+			case Constants.HOD_CSE: 
+				lblLoggedIn.setText("Hello CSE HOD");
+				break;
+			case Constants.HOD_ECE: 
+				lblLoggedIn.setText("Hello ECE HOD");
+				break;
+			case Constants.HOD_ME: 
+				lblLoggedIn.setText("Hello ME HOD");
+				break;
+			case Constants.REGISTRAR: 
+				lblLoggedIn.setText("Hello Registrar");
+				break;
+			case Constants.DOFA: 
+				lblLoggedIn.setText("Hello DOFA");
+				break;
+		}
+		contentPane.add(lblLoggedIn);
+		
 		contentPane.setLayout(null);
 		contentPane.add(lblNewLabel);
 		contentPane.add(lblEmployeeName);
@@ -149,19 +174,19 @@ public class LeaveApplicationNTS extends JFrame {
 		contentPane.add(numberOfLeaveDays);
 		
 		JLabel lblEName = new JLabel("");
-		lblEName.setBounds(149, 53, 172, 14);
+		lblEName.setBounds(149, 53, 185, 14);
 		contentPane.add(lblEName);
 		
 		JLabel lblEId = new JLabel("");
-		lblEId.setBounds(149, 97, 86, 14);
+		lblEId.setBounds(149, 97, 151, 14);
 		contentPane.add(lblEId);
 		
 		JLabel lblEDesignation = new JLabel("");
-		lblEDesignation.setBounds(149, 139, 139, 14);
+		lblEDesignation.setBounds(149, 139, 164, 14);
 		contentPane.add(lblEDesignation);
 		
 		JLabel lblEDept = new JLabel("");
-		lblEDept.setBounds(409, 139, 86, 14);
+		lblEDept.setBounds(410, 139, 86, 14);
 		contentPane.add(lblEDept);
 		
 		JLabel lblEAppDate = new JLabel("");
@@ -169,15 +194,15 @@ public class LeaveApplicationNTS extends JFrame {
 		contentPane.add(lblEAppDate);
 		
 		JLabel lblETypeOfLeave = new JLabel("");
-		lblETypeOfLeave.setBounds(149, 254, 86, 14);
+		lblETypeOfLeave.setBounds(149, 254, 94, 14);
 		contentPane.add(lblETypeOfLeave);
 		
 		JLabel lblUrgent = new JLabel("Urgent ");
-		lblUrgent.setBounds(284, 254, 72, 14);
+		lblUrgent.setBounds(284, 254, 85, 14);
 		contentPane.add(lblUrgent);
 		
 		JLabel labelEUrgent = new JLabel("");
-		labelEUrgent.setBounds(368, 254, 59, 14);
+		labelEUrgent.setBounds(402, 254, 59, 14);
 		contentPane.add(labelEUrgent);
 		
 		JLabel lblEEndDate = new JLabel("");
@@ -198,41 +223,49 @@ public class LeaveApplicationNTS extends JFrame {
 		
 		JLabel lblEReason = new JLabel("");
 		lblEReason.setVerticalAlignment(SwingConstants.TOP);
-		lblEReason.setBounds(103, 386, 388, 70);
+		lblEReason.setBounds(95, 386, 388, 70);
 		contentPane.add(lblEReason);
 		
-		JLabel lblHodsApproval = new JLabel("Registrar's Approval");
-		lblHodsApproval.setBounds(26, 476, 160, 14);
+		JLabel lblHodsApproval = new JLabel("HOD's Approval");
+		lblHodsApproval.setBounds(26, 476, 113, 14);
 		contentPane.add(lblHodsApproval);
 		
+		JLabel lblDofa = new JLabel("DoFA's approval");
+		lblDofa.setBounds(26, 526, 113, 14);
+		contentPane.add(lblDofa);
+		
 		JLabel lblDirector = new JLabel("Director's Approval");
-		lblDirector.setBounds(285, 476, 150, 14);
+		lblDirector.setBounds(239, 476, 141, 14);
 		contentPane.add(lblDirector);
 		
-		JLabel lblRegApproval = new JLabel("Pending");
-		lblRegApproval.setBounds(197, 474, 72, 14);
-		contentPane.add(lblRegApproval);
+		JLabel lblHodApproval = new JLabel("Pending");
+		lblHodApproval.setBounds(149, 476, 85, 14);
+		contentPane.add(lblHodApproval);
+		
+		JLabel lblDofaApproval = new JLabel("Pending");
+		lblDofaApproval.setBounds(149, 526, 94, 14);
+		contentPane.add(lblDofaApproval);
 		
 		JLabel lblDirectorApproval = new JLabel("Pending");
-		lblDirectorApproval.setBounds(449, 476, 72, 14);
+		lblDirectorApproval.setBounds(392, 476, 69, 14);
 		contentPane.add(lblDirectorApproval);
 		
-		JButton btnApprove = new JButton("Approve");
-		btnApprove.addActionListener(new ActionListener() {
+		JButton button = new JButton("Approve ");
+		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				approveApplication();
 			}
 		});
-		btnApprove.setBounds(75, 528, 111, 23);
-		contentPane.add(btnApprove);
+		button.setBounds(71, 576, 100, 23);
+		contentPane.add(button);
 		
-		JButton btnReject = new JButton("Reject");
+		JButton btnReject = new JButton("Reject ");
 		btnReject.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				rejectApplication();
 			}
 		});
-		btnReject.setBounds(208, 528, 89, 23);
+		btnReject.setBounds(208, 576, 89, 23);
 		contentPane.add(btnReject);
 		
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -259,17 +292,28 @@ public class LeaveApplicationNTS extends JFrame {
 				setVisible(false);
 			}
 		});
-		btnBack.setBounds(347, 527, 114, 25);
+		btnBack.setBounds(347, 575, 114, 25);
 		contentPane.add(btnBack);
-		switch(application.getRegistrarStatus()) {
+		switch(application.getHodStatus()) {
 			case Constants.PENDING:
-				lblRegApproval.setText("Pending");
+				lblHodApproval.setText("Pending");
 				break;
 			case Constants.APPROVED:
-				lblRegApproval.setText("Approved");
+				lblHodApproval.setText("Approved");
 				break;
 			case Constants.REJECTED:
-				lblRegApproval.setText("Rejected");
+				lblHodApproval.setText("Rejected");
+				break;
+		}
+		switch(application.getDofaStatus()) {
+			case Constants.PENDING:
+				lblDofaApproval.setText("Pending");
+				break;
+			case Constants.APPROVED:
+				lblDofaApproval.setText("Approved");
+				break;
+			case Constants.REJECTED:
+				lblDofaApproval.setText("Rejected");
 				break;
 		}
 		switch(application.getDirectorStatus()) {
@@ -283,6 +327,7 @@ public class LeaveApplicationNTS extends JFrame {
 				lblDirectorApproval.setText("Rejected");
 				break;
 		}
+		
 	}
 	
 	private void getDepartment() {
@@ -291,12 +336,12 @@ public class LeaveApplicationNTS extends JFrame {
 		try {
 			Class.forName(Constants.JDBC_DRIVER);
 			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
-			String query = "SELECT Office FROM Non_Teaching_staff WHERE EID = ?;";
+			String query = "SELECT Department FROM Teaching_Staff WHERE EID = ?;";
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, application.getEmployeeId());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
-				application.setEmployeeDept(rs.getString("Office"));
+				application.setEmployeeDept(rs.getString("Department"));
 			}
 			rs.close();
 			setVisible(true);
@@ -328,9 +373,15 @@ public class LeaveApplicationNTS extends JFrame {
 			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
 			String query = null;
 			conn.setAutoCommit(false);
-//			if(userType == Constants.HOD_CSE || userType == Constants.HOD_ECE || userType == Constants.HOD_MME) {
-			if(userType == Constants.REGISTRAR) {
-				query = "Update Leave_Applications set Registrar_Status = ? WHERE AID = ?;";
+			if(userType == Constants.HOD_CSE || userType == Constants.HOD_ECE || userType == Constants.HOD_ME) {
+				query = "Update Leave_Applications set HOD_Status = ? WHERE AID = ?;";
+				stmt = conn.prepareStatement(query);
+				stmt.setInt(1, Constants.APPROVED);
+				stmt.setInt(2, application.getApplicationId());
+				stmt.executeUpdate();
+				conn.commit();
+			}else if(userType == Constants.DOFA) {
+				query = "Update Leave_Applications set DOFA_Status = ? WHERE AID = ?;";
 				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, Constants.APPROVED);
 				stmt.setInt(2, application.getApplicationId());
@@ -412,9 +463,14 @@ public class LeaveApplicationNTS extends JFrame {
 			Class.forName(Constants.JDBC_DRIVER);
 			conn = DriverManager.getConnection(Constants.DB_URL, Constants.USER, Constants.PASS);
 			String query = null;
-//			if(userType == Constants.HOD_CSE || userType == Constants.HOD_ECE || userType == Constants.HOD_MME) {
-			if(userType == Constants.REGISTRAR) {
-				query = "Update Leave_Applications set Registrar_Status = ? WHERE AID = ?;";
+			if(userType == Constants.HOD_CSE || userType == Constants.HOD_ECE || userType == Constants.HOD_ME) {
+				query = "Update Leave_Applications set HOD_Status = ? WHERE AID = ?;";
+				stmt = conn.prepareStatement(query);
+				stmt.setInt(1, Constants.REJECTED);
+				stmt.setInt(2, application.getApplicationId());
+				stmt.executeUpdate();
+			} else if(userType == Constants.DOFA) {
+				query = "Update Leave_Applications set DOFA_Status = ? WHERE AID = ?;";
 				stmt = conn.prepareStatement(query);
 				stmt.setInt(1, Constants.REJECTED);
 				stmt.setInt(2, application.getApplicationId());
@@ -447,4 +503,5 @@ public class LeaveApplicationNTS extends JFrame {
 			}
 		}
 	}
+	
 }

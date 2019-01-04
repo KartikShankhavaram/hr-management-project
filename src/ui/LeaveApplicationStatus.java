@@ -28,6 +28,10 @@ import model.LeaveApplicationModel;
 import utils.Constants;
 
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 public class LeaveApplicationStatus extends JFrame {
 
@@ -67,14 +71,14 @@ public class LeaveApplicationStatus extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
-		String columns[] = {"No.", "Application date", "Type of leave", "Urgent", "From", "To", "Status"};
-		String data[][] = {};
-		
-		sp = new JScrollPane();
-		sp.setBounds(5, 5, 419, 261);
-		contentPane.add(sp);
+		setTitle("Leave Applications");
 		
 		JButton btnNewButton = new JButton("Back");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 		btnNewButton.setBounds(143, 277, 135, 23);
 		contentPane.add(btnNewButton);
 		
@@ -143,7 +147,6 @@ public class LeaveApplicationStatus extends JFrame {
 					return false;
 				}
 			};
-			contentPane.remove(sp);
 			applicationStatusTable = new JTable(data, columns);
 			applicationStatusTable.setModel(model);
 			applicationStatusTable.setBounds(5, 5, 430, 261);
@@ -171,8 +174,13 @@ public class LeaveApplicationStatus extends JFrame {
 			});
 			contentPane.setLayout(null);
 			JScrollPane sp = new JScrollPane(applicationStatusTable);
-			sp.setBounds(5, 5, 430, 261);
+			sp.setBounds(5, 39, 430, 227);
 			contentPane.add(sp);
+			
+			JLabel lblNewLabel = new JLabel("Leave Application Status");
+			lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 16));
+			lblNewLabel.setBounds(107, 12, 264, 15);
+			contentPane.add(lblNewLabel);
 			validate();
 			repaint();
 			setVisible(true);
@@ -193,5 +201,4 @@ public class LeaveApplicationStatus extends JFrame {
 			}
 		}
 	}
-
 }

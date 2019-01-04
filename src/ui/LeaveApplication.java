@@ -90,11 +90,13 @@ public class LeaveApplication extends JFrame {
 	 */
 	public LeaveApplication(String employeeId) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 525, 558);
+		setBounds(100, 100, 550, 558);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
+		setTitle("Leave Application Form");
+
 		this.employeeId = employeeId;
 		model = new LeaveApplicationModel(employeeId);
 		
@@ -106,13 +108,13 @@ public class LeaveApplication extends JFrame {
 		lblEmployeeName.setBounds(26, 53, 113, 14);
 		
 		JLabel lblDepartment = new JLabel("Department");
-		lblDepartment.setBounds(334, 139, 85, 14);
+		lblDepartment.setBounds(304, 97, 85, 14);
 		
 		JLabel lblEmployeeNo = new JLabel("Employee Id");
 		lblEmployeeNo.setBounds(26, 97, 113, 14);
 		
 		JLabel lblDate = new JLabel("Date");
-		lblDate.setBounds(334, 97, 85, 14);
+		lblDate.setBounds(334, 139, 85, 14);
 		
 		JLabel lblDesignation = new JLabel("Designation");
 		lblDesignation.setBounds(26, 139, 113, 14);
@@ -124,7 +126,7 @@ public class LeaveApplication extends JFrame {
 		
 		txtDepartment = new JTextField();
 		txtDepartment.setEditable(false);
-		txtDepartment.setBounds(427, 137, 86, 20);
+		txtDepartment.setBounds(407, 95, 131, 20);
 		txtDepartment.setColumns(10);
 		
 		txtEmployeeId = new JTextField();
@@ -134,7 +136,7 @@ public class LeaveApplication extends JFrame {
 		
 		txtDate = new JTextField();
 		txtDate.setEditable(false);
-		txtDate.setBounds(427, 95, 86, 20);
+		txtDate.setBounds(417, 137, 86, 20);
 		txtDate.setColumns(10);
 		
 		txtDesignation = new JTextField();
@@ -177,9 +179,10 @@ public class LeaveApplication extends JFrame {
 				submitApplication();
 			}
 		});
-		btnGoToAppraisal.setBounds(166, 468, 216, 23);
+		btnGoToAppraisal.setBounds(95, 467, 216, 23);
 		
 		numberOfLeaveDays = new JLabel("1");
+		numberOfLeaveDays.setFont(new Font("Dialog", Font.PLAIN, 12));
 		numberOfLeaveDays.setBounds(149, 339, 46, 14);
 		
 		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -306,6 +309,15 @@ public class LeaveApplication extends JFrame {
 		contentPane.add(numberOfLeaveDays);
 		contentPane.add(chckbxUrgent);
 		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+			}
+		});
+		btnBack.setBounds(362, 466, 114, 25);
+		contentPane.add(btnBack);
+		
 		fetchEmployeeDetails();
 	}
 	
@@ -326,8 +338,8 @@ public class LeaveApplication extends JFrame {
 		ResultSet rs2 = stmt2.executeQuery();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		if(rs1.next()) {
-			txtName.setText(rs1.getString("Title") + " " + rs1.getString("Name"));
-			model.setEmployeeName(rs1.getString("Title") + " " + rs1.getString("Name"));
+			txtName.setText(rs1.getString("Name"));
+			model.setEmployeeName(rs1.getString("Name"));
 			txtEmployeeId.setText(employeeId);
 			txtDesignation.setText(rs1.getString("Designation"));
 			model.setDesignation(rs1.getString("Designation"));
@@ -338,8 +350,8 @@ public class LeaveApplication extends JFrame {
 			teachingStaff = false;
 			setVisible(true);
 		} else if(rs2.next()) {
-			txtName.setText(rs2.getString("Title") + " " + rs2.getString("Name"));
-			model.setEmployeeName(rs2.getString("Title") + " " + rs2.getString("Name"));
+			txtName.setText(rs2.getString("Name"));
+			model.setEmployeeName(rs2.getString("Name"));
 			txtEmployeeId.setText(employeeId);
 			txtDesignation.setText(rs2.getString("Designation"));
 			model.setDesignation(rs2.getString("Designation"));
