@@ -207,7 +207,7 @@ public class LeaveApplicationNTSReview extends JFrame {
 		lblEReason.setBounds(103, 386, 388, 70);
 		contentPane.add(lblEReason);
 		
-		JLabel lblHodsApproval = new JLabel("Registrar's Approval");
+		JLabel lblHodsApproval = new JLabel("Registrar's Remarks");
 		lblHodsApproval.setBounds(26, 476, 160, 14);
 		contentPane.add(lblHodsApproval);
 		
